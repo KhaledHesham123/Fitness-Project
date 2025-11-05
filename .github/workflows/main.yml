@@ -8,7 +8,7 @@ on:
 
 env:
   REGISTRY: docker.io
-  IMAGE_NAME: ${{ github.repository_owner }}/${{ github.event.repository.name }}
+  IMAGE_NAME: ${{ github.repository_owner }}/${{ github.event.repository.name }} 
 
 jobs:
   build-and-push:
@@ -16,20 +16,27 @@ jobs:
 
     strategy:
       matrix:
-        service:
-          - IdentityService
-          - NotificationService
-          - NutritionService
-          - ReportsService
-          - UserProfileService
-          - UserTrainingTrackingService
-          - WorkoutCatalogService
+        svc:
+          - name: IdentityService
+            dockerfile: ./IdentityService/Dockerfile
+          - name: NotificationService
+            dockerfile: ./NotificationService/Dockerfile
+          - name: NutritionService
+            dockerfile: ./NutritionService/Dockerfile
+          - name: ReportsService
+            dockerfile: ./ReportsService/Dockerfile
+          - name: UserProfileService
+            dockerfile: ./UserProfileService/Dockerfile
+          - name: UserTrainingTrackingService
+            dockerfile: ./UserTrainingTrackingService/Dockerfile
+          - name: WorkoutCatalogService
+            dockerfile: ./WorkoutCatalogService/Dockerfile
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set Docker Hub repo
+      - name: Set Docker Hub repository name
         id: repo
         run: |
           DOCKER_USERNAME="${{ secrets.DOCKER_USERNAME }}"
@@ -48,15 +55,15 @@ jobs:
 
       - name: Set dynamic image tag
         id: vars
-        run: echo "tag=${{ matrix.service }}-${GITHUB_REF_NAME}-${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+        run: echo "tag=${{ matrix.svc.name }}-${GITHUB_REF_NAME}-${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
 
-      - name: Build and push image
+      - name: Build and push service image
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./${{ matrix.service }}/Dockerfile
+          file: ${{ matrix.svc.dockerfile }}
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.REGISTRY }}/${{ steps.repo.outputs.repo_name }}:${{ matrix.service }}-${{ steps.vars.outputs.tag }}
+          tags: ${{ env.REGISTRY }}/${{ steps.repo.outputs.repo_name }}:${{ matrix.svc.name }}-${{ steps.vars.outputs.tag }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
