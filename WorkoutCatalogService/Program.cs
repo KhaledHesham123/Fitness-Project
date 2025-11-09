@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using WorkoutCatalogService.Data.Context;
+using WorkoutCatalogService.Shared.MiddleWares;
+using WorkoutCatalogService.Shared.UnitofWorks;
 
 namespace WorkoutCatalogService
 {
@@ -19,17 +21,20 @@ namespace WorkoutCatalogService
 
             builder.Services.AddDbContext<WorkoutCatalogDbContext>(options => 
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection"));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection")).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
 
             builder.Services.AddMediatR(cfg =>
             {
                 cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly());
             });
-            builder.Services.AddMediatR(cfg =>
-            {
-                cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly());
-            });
+
+            builder.Services.AddScoped<IunitofWork, UnitofWork>();
+
+           
+
+            builder.Services.AddScoped<TransactionMiddlerWare>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -57,6 +62,9 @@ namespace WorkoutCatalogService
 
 
             app.UseHttpsRedirection();
+
+            app.UseMiddleware<TransactionMiddlerWare>();
+
 
             app.UseAuthorization();
 

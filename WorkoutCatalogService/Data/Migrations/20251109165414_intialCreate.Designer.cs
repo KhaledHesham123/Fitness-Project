@@ -12,7 +12,7 @@ using WorkoutCatalogService.Data.Context;
 namespace WorkoutCatalogService.Data.Migrations
 {
     [DbContext(typeof(WorkoutCatalogDbContext))]
-    [Migration("20251107174602_intialCreate")]
+    [Migration("20251109165414_intialCreate")]
     partial class intialCreate
     {
         /// <inheritdoc />
