@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace UserTrainingTrackingService.Controllers
+namespace UserTrainingTrackingService
 {
     [ApiController]
     [Route("[controller]")]
