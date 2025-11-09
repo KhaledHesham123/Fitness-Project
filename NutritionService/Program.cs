@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using NutritionService.Data;
+using NutritionService.Data.Context;
 
 namespace NutritionService
 {
