@@ -12,8 +12,8 @@ using WorkoutCatalogService.Data.Context;
 namespace WorkoutCatalogService.Data.Migrations
 {
     [DbContext(typeof(WorkoutCatalogDbContext))]
-    [Migration("20251109165414_intialCreate")]
-    partial class intialCreate
+    [Migration("20251109192023_intialCreat")]
+    partial class intialCreat
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
