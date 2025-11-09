@@ -1,6 +1,7 @@
 ﻿namespace WorkoutCatalogService.Shared.MessageBrocker
 {
-    public class MessageBrokerPublisher
+    public class BasicMessage
     {
+        public string Type { get; set; }
     }
 }

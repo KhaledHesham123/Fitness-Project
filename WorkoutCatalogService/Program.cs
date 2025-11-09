@@ -31,10 +31,7 @@ namespace WorkoutCatalogService
 
             builder.Services.AddScoped<IunitofWork, UnitofWork>();
 
-            builder.Services.AddMediatR(cfg =>
-            {
-                cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly());
-            });
+           
 
             builder.Services.AddScoped<TransactionMiddlerWare>();
 

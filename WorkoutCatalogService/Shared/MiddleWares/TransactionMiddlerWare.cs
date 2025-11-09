@@ -8,9 +8,9 @@ namespace WorkoutCatalogService.Shared.MiddleWares
     public class TransactionMiddlerWare : IMiddleware
     {
         private readonly IunitofWork unitofWork;
-        private readonly ILogger logger;
+        private readonly ILogger<TransactionMiddlerWare> logger;
 
-        public TransactionMiddlerWare(IunitofWork unitofWork,ILogger logger)
+        public TransactionMiddlerWare(IunitofWork unitofWork,ILogger<TransactionMiddlerWare> logger)
         {
             this.unitofWork = unitofWork;
             this.logger = logger;
