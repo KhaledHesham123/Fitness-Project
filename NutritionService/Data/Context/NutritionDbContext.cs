@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NutritionService.Models;
 
-namespace NutritionService.Data
+namespace NutritionService.Data.Context
 {
     public class NutritionDbContext : DbContext
 
@@ -18,16 +18,17 @@ namespace NutritionService.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Ingredient>()
-                .HasOne(i => i.Meal )
-                .WithMany(i => i.Ingredients)
-                .HasForeignKey(i => i.Meal)
-                 .OnDelete(DeleteBehavior.Cascade);
+     .HasOne(i => i.Meal)             
+     .WithMany(m => m.Ingredients)    
+     .HasForeignKey(i => i.MealId)      
+     .OnDelete(DeleteBehavior.Cascade);
+
 
 
             modelBuilder.Entity<Meal>()
-           .Property(m => m.Name)
-           .IsRequired()
-           .HasMaxLength(200);
+     .Property(m => m.Name)
+     .IsRequired()
+     .HasMaxLength(200);
 
             modelBuilder.Entity<Meal>()
                 .Property(m => m.Description)
@@ -43,6 +44,17 @@ namespace NutritionService.Data
                 .IsRequired()
                 .HasMaxLength(50);
 
+            modelBuilder.Entity<Meal>()
+                .Property(m => m.Protein)
+                .HasPrecision(10, 2); 
+
+            modelBuilder.Entity<Meal>()
+                .Property(m => m.Carbohydrates)
+                .HasPrecision(10, 2);
+
+            modelBuilder.Entity<Meal>()
+                .Property(m => m.Fat)
+                .HasPrecision(10, 2);
 
         }
 
