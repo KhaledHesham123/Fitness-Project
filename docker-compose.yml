@@ -46,3 +46,15 @@ services:
     build:
       context: .
       dockerfile: UserTrainingTrackingService/Dockerfile
+  
+  sqlserver:
+    image: ${DOCKER_REGISTRY-}sqlserver
+    build:
+      context: .
+      dockerfile: sqlserver/Dockerfile
+     
+  rabbitmq:
+    image: ${DOCKER_REGISTRY-}rabbitmq
+    build:
+      context: .
+      dockerfile: rabbitmq/Dockerfile
