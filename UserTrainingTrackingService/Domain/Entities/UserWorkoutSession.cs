@@ -2,9 +2,8 @@
 
 namespace UserTrainingTrackingService.Domain.Entities
 {
-    public class UserWorkoutSession
+    public class UserWorkoutSession : BaseEntity
     {
-        public int Id { get; set; }
         public int UserId { get; set; }
         public int WorkoutPlanId { get; set; }
         public DateTime StartTime { get; set; }
