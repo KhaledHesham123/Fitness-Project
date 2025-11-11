@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Linq.Expressions;
 using UserTrainingTrackingService.Domain.Entities;
 using UserTrainingTrackingService.Infrastructure.Persistence.Data;
+using UserTrainingTrackingService.Shared.Interfaces;
 
 namespace UserTrainingTrackingService.Infrastructure.Repositories
 {

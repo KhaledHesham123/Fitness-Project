@@ -23,7 +23,6 @@
     <Folder Include="Features\" />
     <Folder Include="Migrations\" />
     <Folder Include="Shared\CustomMiddlewares\" />
-    <Folder Include="Shared\Interfaces\" />
     <Folder Include="Shared\Response\" />
   </ItemGroup>
 
