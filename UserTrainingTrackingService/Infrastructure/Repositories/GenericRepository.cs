@@ -6,7 +6,7 @@ using UserTrainingTrackingService.Infrastructure.Persistence.Data;
 
 namespace UserTrainingTrackingService.Infrastructure.Repositories
 {
-    public class GenericRepository<T> where T : BaseEntity, new()
+    public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity, new()
     {
         protected readonly UserTrainingTrackingDbContext _context;
         protected readonly DbSet<T> _dbSet;
