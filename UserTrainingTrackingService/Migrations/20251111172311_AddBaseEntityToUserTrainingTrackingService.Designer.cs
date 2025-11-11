@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UserTrainingTrackingService.Infrastructure.Persistence.Data;
 
@@ -11,9 +12,11 @@ using UserTrainingTrackingService.Infrastructure.Persistence.Data;
 namespace UserTrainingTrackingService.Migrations
 {
     [DbContext(typeof(UserTrainingTrackingDbContext))]
-    partial class UserTrainingTrackingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251111172311_AddBaseEntityToUserTrainingTrackingService")]
+    partial class AddBaseEntityToUserTrainingTrackingService
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
