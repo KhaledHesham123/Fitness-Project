@@ -1,4 +1,7 @@
 
+using IdentityService.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace IdentityService
 {
     public class Program
@@ -7,12 +10,14 @@ namespace IdentityService
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
 
             builder.Services.AddControllers();
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
+            builder.Services.AddDbContext<IdentityContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityDatabase"));
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
