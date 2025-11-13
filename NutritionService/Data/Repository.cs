@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace NutritionService.Data
 {
-    public class Repository<T> where T : BaseEntity, new()
+    public class Repository<T> : IRepository<T> where T : BaseEntity, new()
     {
         protected readonly NutritionDbContext _context;
         protected readonly DbSet<T> _dbSet;
@@ -56,7 +56,15 @@ namespace NutritionService.Data
         {
             return _dbSet.Where(expression);
         }
-
+        public virtual async Task DeleteAsync(int id)
+        {
+            var entity = await _dbSet.FindAsync(id);
+            if (entity != null)
+            {
+                entity.IsDeleted = true;
+                _dbSet.Update(entity);
+            }
+        }
         public void SaveInclude(T entity, params string[] includedProperties)
         {
             var localEntity = _dbSet.Local.FirstOrDefault(e => e.ID == entity.ID);
@@ -97,4 +105,4 @@ namespace NutritionService.Data
     }
 
 }
-}
+
