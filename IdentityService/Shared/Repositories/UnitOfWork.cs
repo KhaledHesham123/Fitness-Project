@@ -6,10 +6,10 @@ namespace IdentityService.Shared.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly IdentityContext _context;
+        private readonly IdentityDbContext _context;
         private IDbContextTransaction? _transaction;
 
-        public UnitOfWork(IdentityContext context)
+        public UnitOfWork(IdentityDbContext context)
         {
             _context = context;
 

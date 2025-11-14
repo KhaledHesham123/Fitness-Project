@@ -5,10 +5,9 @@
         public string Email { get; set; }
         public string HashPassword { get; set; }
 
-        public Guid RoleId { get; set; }
-        public Role Role { get; set; }
-
         public ICollection<UserClaim> Claims { get; set; } = new HashSet<UserClaim>();
+        public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
+        public ICollection<UserPermission> UserPermissions { get; set; } = new List<UserPermission>();
 
     }
 }
