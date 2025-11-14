@@ -1,6 +1,6 @@
 ﻿
 
-namespace IdentityService.Domain.Entities
+namespace IdentityService.Shared.Entities
 {
     public class Role : BaseEntity
     {

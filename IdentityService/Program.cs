@@ -1,5 +1,4 @@
-
-using IdentityService.Infrastructure.Data;
+using IdentityService.Data.DBContexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace IdentityService

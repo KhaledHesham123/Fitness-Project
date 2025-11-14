@@ -1,7 +1,8 @@
-﻿using IdentityService.Domain.Entities;
+﻿using IdentityService.Data.DBContexts;
+using IdentityService.Shared.Entities;
 
 
-namespace IdentityService.Infrastructure.Data
+namespace IdentityService.Data
 {
     public static class DataSeeder
     {

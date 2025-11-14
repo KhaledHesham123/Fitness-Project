@@ -1,5 +1,5 @@
 ﻿
-namespace IdentityService.Domain.Entities
+namespace IdentityService.Shared.Entities
 {
     public class UserClaim: BaseEntity
     {

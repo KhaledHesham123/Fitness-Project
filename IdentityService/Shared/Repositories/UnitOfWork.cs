@@ -1,8 +1,8 @@
-using IdentityService.Domain.Interfaces;
-using IdentityService.Infrastructure.Data;
+using IdentityService.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
+using IdentityService.Data.DBContexts;
 
-namespace IdentityService.Infrastructure.Repositories
+namespace IdentityService.Shared.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
