@@ -20,8 +20,9 @@ namespace IdentityService.Features.Authantication.CQRS.Commends
 
         public async Task<UserLoginToReturnDTO> Handle(LoginCommend request, CancellationToken cancellationToken)
         {
-            var user = await repository.GetQueryableByCriteria(x => x.Email == request.UserLoginDTO.Email)
-                .Include(u => u.Role).Include(u => u.Claims).FirstOrDefaultAsync();
+            var user = await repository.GetByCriteriaAsync(x => x.Email == request.UserLoginDTO.Email);
+            //var user = await repository.GetQueryableByCriteria(x => x.Email == request.UserLoginDTO.Email)
+            //    .Include(u => u.Role).Include(u => u.Claims).FirstOrDefaultAsync();
 
             var hasher = new PasswordHasher<User>();
 
@@ -39,7 +40,7 @@ namespace IdentityService.Features.Authantication.CQRS.Commends
 
             return new UserLoginToReturnDTO
             {
-                role= user.Role.Name,
+                //role= user.Role.Name,
                 Token= "Some JWT Token"
 
             };      

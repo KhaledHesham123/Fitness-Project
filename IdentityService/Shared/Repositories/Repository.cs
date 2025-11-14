@@ -10,10 +10,10 @@ namespace IdentityService.Shared.Repositories
 {
     public class Repository<T> : IRepository<T> where T : BaseEntity
     {
-        protected readonly IdentityContext _context;
+        protected readonly IdentityDbContext _context;
         protected readonly DbSet<T> _dbSet;
 
-        public Repository(IdentityContext context)
+        public Repository(IdentityDbContext context)
         {
             _context = context;
             _dbSet = context.Set<T>();
