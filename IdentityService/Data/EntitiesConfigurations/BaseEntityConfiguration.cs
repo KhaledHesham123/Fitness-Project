@@ -1,8 +1,8 @@
-﻿using IdentityService.Domain.Entities;
+﻿using IdentityService.Shared.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace IdentityService.Infrastructure.EntitiesConfigurations
+namespace IdentityService.Data.EntitiesConfigurations
 {
     public class BaseEntityConfiguration<T> : IEntityTypeConfiguration<T>
         where T : BaseEntity

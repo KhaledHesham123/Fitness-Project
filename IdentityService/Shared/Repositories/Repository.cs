@@ -1,12 +1,12 @@
 
 
-using IdentityService.Domain.Entities;
-using IdentityService.Domain.Interfaces;
-using IdentityService.Infrastructure.Data;
+using IdentityService.Shared.Entities;
+using IdentityService.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using IdentityService.Data.DBContexts;
 
-namespace IdentityService.Infrastructure.Repositories
+namespace IdentityService.Shared.Repositories
 {
     public class Repository<T> : IRepository<T> where T : BaseEntity
     {

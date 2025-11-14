@@ -1,11 +1,11 @@
 ﻿
 
-using IdentityService.Domain.Entities;
-using IdentityService.Infrastructure.EntitiesConfigurations;
+using IdentityService.Shared.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using IdentityService.Data.EntitiesConfigurations;
 
-namespace IdentityService.Infrastructure.Data
+namespace IdentityService.Data.DBContexts
 {
     public class IdentityContext : DbContext
     {
