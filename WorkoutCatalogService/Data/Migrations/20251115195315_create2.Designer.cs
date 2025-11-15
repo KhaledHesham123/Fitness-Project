@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WorkoutCatalogService.Data.Context;
 
@@ -11,9 +12,11 @@ using WorkoutCatalogService.Data.Context;
 namespace WorkoutCatalogService.Data.Migrations
 {
     [DbContext(typeof(WorkoutCatalogDbContext))]
-    partial class WorkoutCatalogDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251115195315_create2")]
+    partial class create2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,7 +48,7 @@ namespace WorkoutCatalogService.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Plan");
+                    b.ToTable("WorkoutPlans");
                 });
 
             modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.PlanWorkout", b =>
@@ -72,7 +75,7 @@ namespace WorkoutCatalogService.Data.Migrations
 
                     b.HasIndex("ExerciseId");
 
-                    b.ToTable("PlanWorkout");
+                    b.ToTable("WorkoutExercise");
                 });
 
             modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.SubCategory", b =>
@@ -137,7 +140,7 @@ namespace WorkoutCatalogService.Data.Migrations
 
                     b.HasIndex("SubCategoryId");
 
-                    b.ToTable("Workout");
+                    b.ToTable("Exercises");
                 });
 
             modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.category", b =>

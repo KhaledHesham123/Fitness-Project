@@ -1,6 +1,6 @@
 ﻿namespace WorkoutCatalogService.Shared.Entites
 {
-    public class Exercise:BaseEntity
+    public class Workout : BaseEntity
     {
        
         public string Name { get; set; } = string.Empty;  // like Incline Bench Press
@@ -13,7 +13,7 @@
         public Guid SubCategoryId { get; set; }
         public SubCategory SubCategory { get; set; } = null!;
 
-        public ICollection<WorkoutExercise> WorkoutExercises { get; set; } = new HashSet<WorkoutExercise>();
+        public ICollection<PlanWorkout> PlanWorkout { get; set; } = new HashSet<PlanWorkout>();
 
 
     }
