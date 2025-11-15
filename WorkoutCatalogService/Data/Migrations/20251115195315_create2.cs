@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WorkoutCatalogService.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class intialCreat : Migration
+    public partial class create2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

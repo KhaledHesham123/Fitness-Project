@@ -23,6 +23,9 @@ namespace IdentityService.Authorization
             var mode = requireAll ? "ALL" : "ANY";
             var joined = string.Join(",", permissions);
             return $"Permission:{mode}:{joined}";
+
+            // Permission:ALL:User.Create,User.Delete
+
         }
     }
 }

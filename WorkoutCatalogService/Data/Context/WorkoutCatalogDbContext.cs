@@ -17,9 +17,9 @@ namespace WorkoutCatalogService.Data.Context
         public DbSet<Shared.Entites.category> Category { get; set; }
         public DbSet<Shared.Entites.SubCategory> SubCategory { get; set; }
 
-        public DbSet<Shared.Entites.Exercise> Exercises { get; set; }
-        public DbSet<Shared.Entites.WorkoutPlan> WorkoutPlans { get; set; }
-        public DbSet<Shared.Entites.WorkoutExercise> WorkoutExercise { get; set; }
+        public DbSet<Shared.Entites.Workout> Workout { get; set; }
+        public DbSet<Shared.Entites.Plan> Plan { get; set; }
+        public DbSet<Shared.Entites.PlanWorkout> PlanWorkout { get; set; }
 
     }
 }
