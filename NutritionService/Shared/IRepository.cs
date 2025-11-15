@@ -1,7 +1,7 @@
 ﻿using NutritionService.Models;
 using System.Linq.Expressions;
 
-namespace NutritionService.Data
+namespace NutritionService.Shared
 {
     public interface IRepository<T> where T : BaseEntity
     {
