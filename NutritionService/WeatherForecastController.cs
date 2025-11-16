@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace NutritionService.Controllers
+namespace NutritionService
 {
     [ApiController]
     [Route("[controller]")]

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NutritionService.Models;
+using NutritionService.Domain.Entities;
 
-namespace NutritionService.Data.Context
+namespace NutritionService.Infrastructure.Persistence.Data
 {
     public class NutritionDbContext : DbContext
 

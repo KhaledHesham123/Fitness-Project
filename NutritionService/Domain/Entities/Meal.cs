@@ -1,6 +1,6 @@
-﻿using NutritionService.Models.Enumeration;
+﻿using NutritionService.Domain.Enums;
 
-namespace NutritionService.Models
+namespace NutritionService.Domain.Entities
 {
     public class Meal : BaseEntity
     {
@@ -14,7 +14,6 @@ namespace NutritionService.Models
         public decimal Carbohydrates { get; set; } 
         public decimal Fat { get; set; } 
         public string ImageUrl { get; set; }
-
         public virtual ICollection<Ingredient> Ingredients { get; set; }
       
 
