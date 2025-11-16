@@ -16,7 +16,7 @@ namespace WorkoutCatalogService.Data.Configration
                 HasConversion(DifficultyLevel=> DifficultyLevel.ToString()
                 , dbValue => (MuscleGroup)Enum.Parse(typeof(MuscleGroup), dbValue));
 
-            builder.HasMany(x => x.PlanWorkout).WithOne(x => x.Workout).HasForeignKey(x => x.ExerciseId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(x => x.PlanWorkout).WithOne().HasForeignKey(x => x.ExerciseId).OnDelete(DeleteBehavior.Cascade);
 
         }
     }

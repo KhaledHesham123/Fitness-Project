@@ -15,6 +15,9 @@ namespace WorkoutCatalogService.Shared.GenericRepos
 
         Task addAsync(T item);
 
+        Task AddRangeAsync(IEnumerable<T> entities); 
+
+
         Task UpdateAsync(T item);
 
         Task DeleteAsync(T item);

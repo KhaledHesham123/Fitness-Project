@@ -10,6 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\WorkoutPlans\**" />
+    <Content Remove="Features\WorkoutPlans\**" />
+    <EmbeddedResource Remove="Features\WorkoutPlans\**" />
+    <None Remove="Features\WorkoutPlans\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MediatR" Version="13.1.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.10" />
@@ -33,10 +40,8 @@
     <Folder Include="Data\Migrations\" />
     <Folder Include="Features\Category\CQRS\Commends\" />
     <Folder Include="Features\Exercises\" />
-    <Folder Include="Features\Plan\CQRS\Commends\" />
-    <Folder Include="Features\Plan\CQRS\NewFolder\" />
-    <Folder Include="Features\Plan\DTOs\" />
-    <Folder Include="Features\WorkoutPlans\" />
+    <Folder Include="Features\PlanWorkouts\CQRS\Quries\" />
+    <Folder Include="Features\Plans\CQRS\Quries\" />
   </ItemGroup>
 
 </Project>

@@ -11,15 +11,7 @@ namespace WorkoutCatalogService.Data.Configration
             builder.HasKey(x => new { x.WorkoutPlanId, x.ExerciseId });
 
 
-            builder.HasOne(x => x.Workout)
-                   .WithMany(x => x.PlanWorkout)
-                   .HasForeignKey(x => x.ExerciseId)
-                   .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasOne(x => x.WorkoutPlan)
-       .WithMany(x => x.PlanWorkout)
-       .HasForeignKey(x => x.WorkoutPlanId)
-       .OnDelete(DeleteBehavior.Cascade);
+           
 
 
         }

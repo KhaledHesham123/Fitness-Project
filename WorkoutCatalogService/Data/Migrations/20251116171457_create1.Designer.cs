@@ -12,8 +12,8 @@ using WorkoutCatalogService.Data.Context;
 namespace WorkoutCatalogService.Data.Migrations
 {
     [DbContext(typeof(WorkoutCatalogDbContext))]
-    [Migration("20251115195511_create3")]
-    partial class create3
+    [Migration("20251116171457_create1")]
+    partial class create1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,6 +30,10 @@ namespace WorkoutCatalogService.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.PrimitiveCollection<string>("AssignedUserIds")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -167,21 +171,17 @@ namespace WorkoutCatalogService.Data.Migrations
 
             modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.PlanWorkout", b =>
                 {
-                    b.HasOne("WorkoutCatalogService.Shared.Entites.Workout", "Workout")
+                    b.HasOne("WorkoutCatalogService.Shared.Entites.Workout", null)
                         .WithMany("PlanWorkout")
                         .HasForeignKey("ExerciseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WorkoutCatalogService.Shared.Entites.Plan", "WorkoutPlan")
+                    b.HasOne("WorkoutCatalogService.Shared.Entites.Plan", null)
                         .WithMany("PlanWorkout")
                         .HasForeignKey("WorkoutPlanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Workout");
-
-                    b.Navigation("WorkoutPlan");
                 });
 
             modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.SubCategory", b =>

@@ -41,7 +41,13 @@ namespace WorkoutCatalogService.Shared.GenericRepos
             await _dbContext.Set<T>().AddAsync(item);
         }
 
-        public  Task UpdateAsync(T item)
+        public async Task AddRangeAsync(IEnumerable<T> entities)
+        {
+            await _dbSet.AddRangeAsync(entities);
+        }
+
+
+        public Task UpdateAsync(T item)
         {
             _dbContext.Set<T>().Update(item);
             return Task.CompletedTask;

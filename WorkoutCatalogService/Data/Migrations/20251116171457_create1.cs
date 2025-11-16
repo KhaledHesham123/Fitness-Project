@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WorkoutCatalogService.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class create2 : Migration
+    public partial class create1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,18 +26,19 @@ namespace WorkoutCatalogService.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "WorkoutPlans",
+                name: "Plan",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DifficultyLevel = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AssignedUserIds = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WorkoutPlans", x => x.Id);
+                    table.PrimaryKey("PK_Plan", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -62,7 +63,7 @@ namespace WorkoutCatalogService.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Exercises",
+                name: "Workout",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -76,9 +77,9 @@ namespace WorkoutCatalogService.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Exercises", x => x.Id);
+                    table.PrimaryKey("PK_Workout", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Exercises_SubCategory_SubCategoryId",
+                        name: "FK_Workout_SubCategory_SubCategoryId",
                         column: x => x.SubCategoryId,
                         principalTable: "SubCategory",
                         principalColumn: "Id",
@@ -86,7 +87,7 @@ namespace WorkoutCatalogService.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "WorkoutExercise",
+                name: "PlanWorkout",
                 columns: table => new
                 {
                     WorkoutPlanId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -98,25 +99,25 @@ namespace WorkoutCatalogService.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WorkoutExercise", x => new { x.WorkoutPlanId, x.ExerciseId });
+                    table.PrimaryKey("PK_PlanWorkout", x => new { x.WorkoutPlanId, x.ExerciseId });
                     table.ForeignKey(
-                        name: "FK_WorkoutExercise_Exercises_ExerciseId",
-                        column: x => x.ExerciseId,
-                        principalTable: "Exercises",
+                        name: "FK_PlanWorkout_Plan_WorkoutPlanId",
+                        column: x => x.WorkoutPlanId,
+                        principalTable: "Plan",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_WorkoutExercise_WorkoutPlans_WorkoutPlanId",
-                        column: x => x.WorkoutPlanId,
-                        principalTable: "WorkoutPlans",
+                        name: "FK_PlanWorkout_Workout_ExerciseId",
+                        column: x => x.ExerciseId,
+                        principalTable: "Workout",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Exercises_SubCategoryId",
-                table: "Exercises",
-                column: "SubCategoryId");
+                name: "IX_PlanWorkout_ExerciseId",
+                table: "PlanWorkout",
+                column: "ExerciseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SubCategory_CategoryId",
@@ -124,22 +125,22 @@ namespace WorkoutCatalogService.Data.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkoutExercise_ExerciseId",
-                table: "WorkoutExercise",
-                column: "ExerciseId");
+                name: "IX_Workout_SubCategoryId",
+                table: "Workout",
+                column: "SubCategoryId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "WorkoutExercise");
+                name: "PlanWorkout");
 
             migrationBuilder.DropTable(
-                name: "Exercises");
+                name: "Plan");
 
             migrationBuilder.DropTable(
-                name: "WorkoutPlans");
+                name: "Workout");
 
             migrationBuilder.DropTable(
                 name: "SubCategory");
