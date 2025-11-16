@@ -33,6 +33,9 @@
     <Folder Include="Data\Migrations\" />
     <Folder Include="Features\Category\CQRS\Commends\" />
     <Folder Include="Features\Exercises\" />
+    <Folder Include="Features\Plan\CQRS\Commends\" />
+    <Folder Include="Features\Plan\CQRS\NewFolder\" />
+    <Folder Include="Features\Plan\DTOs\" />
     <Folder Include="Features\WorkoutPlans\" />
   </ItemGroup>
 

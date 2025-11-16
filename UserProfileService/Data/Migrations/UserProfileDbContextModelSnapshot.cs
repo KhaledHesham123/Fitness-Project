@@ -8,7 +8,7 @@ using UserProfileService.Data.Context;
 
 #nullable disable
 
-namespace UserProfileService.intialCreat.Data.Migrations
+namespace UserProfileService.Data.Migrations
 {
     [DbContext(typeof(UserProfileDbContext))]
     partial class UserProfileDbContextModelSnapshot : ModelSnapshot
@@ -27,10 +27,6 @@ namespace UserProfileService.intialCreat.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ActivityLevel")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
@@ -62,6 +58,9 @@ namespace UserProfileService.intialCreat.Data.Migrations
 
                     b.Property<decimal>("Weight")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid?>("planid")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 

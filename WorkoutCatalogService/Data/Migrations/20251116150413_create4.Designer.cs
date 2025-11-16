@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WorkoutCatalogService.Data.Context;
 
@@ -11,9 +12,11 @@ using WorkoutCatalogService.Data.Context;
 namespace WorkoutCatalogService.Data.Migrations
 {
     [DbContext(typeof(WorkoutCatalogDbContext))]
-    partial class WorkoutCatalogDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251116150413_create4")]
+    partial class create4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
