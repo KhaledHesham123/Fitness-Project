@@ -22,9 +22,7 @@ namespace UserProfileService.Data.Configration
               HasConversion(DifficultyLevel => DifficultyLevel.ToString()
               , dbValue => (FitnessGoal)Enum.Parse(typeof(FitnessGoal), dbValue));
 
-            builder.Property(x => x.ActivityLevel).
-              HasConversion(DifficultyLevel => DifficultyLevel.ToString()
-              , dbValue => (ActivityLevel)Enum.Parse(typeof(ActivityLevel), dbValue));
+           
 
 
         }

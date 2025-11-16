@@ -9,11 +9,11 @@ using UserProfileService.Data.Context;
 
 #nullable disable
 
-namespace UserProfileService.intialCreat.Data.Migrations
+namespace UserProfileService.Data.Migrations
 {
     [DbContext(typeof(UserProfileDbContext))]
-    [Migration("20251113175855_create2")]
-    partial class create2
+    [Migration("20251116150642_create1")]
+    partial class create1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,10 +30,6 @@ namespace UserProfileService.intialCreat.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ActivityLevel")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
@@ -65,6 +61,9 @@ namespace UserProfileService.intialCreat.Data.Migrations
 
                     b.Property<decimal>("Weight")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid?>("planid")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 

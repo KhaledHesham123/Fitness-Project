@@ -14,13 +14,7 @@
         Maintenance
     }
 
-    public enum ActivityLevel
-    {
-        Sedentary,
-        LightlyActive,
-        ModeratelyActive,
-        VeryActive
-    }
+  
 
     public class UserProfile:BaseEntity
     {
@@ -32,7 +26,8 @@
         public decimal Weight { get; set; }
         public decimal Height { get; set; }
         public FitnessGoal FitnessGoal { get; set; }
-        public ActivityLevel ActivityLevel { get; set; }
+
+        public Guid? planid { get; set; } = null;
 
         public List<UserProgress> ProgressHistory { get; set; } = new();
     }

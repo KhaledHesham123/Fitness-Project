@@ -7,5 +7,8 @@
         public string Description { get; set; } = string.Empty;
         public DifficultyLevel DifficultyLevel { get; set; }
         public ICollection<PlanWorkout> PlanWorkout { get; set; } =new HashSet<PlanWorkout>();
+
+        public ICollection<Guid> AssignedUserIds { get; set; } = new HashSet<Guid>();
+
     }
 }
