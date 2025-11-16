@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using UserTrainingTrackingService.Domain.Entities;
 
-namespace UserTrainingTrackingService.Infrastructure.Repositories
+namespace UserTrainingTrackingService.Shared.Interfaces
 {
     public interface IGenericRepository<T> where T : BaseEntity, new()
     {
