@@ -1,4 +1,5 @@
-﻿using WorkoutCatalogService.Shared.Entites;
+﻿using System.Linq.Expressions;
+using WorkoutCatalogService.Shared.Entites;
 
 namespace WorkoutCatalogService.Shared.GenericRepos
 {
@@ -7,6 +8,8 @@ namespace WorkoutCatalogService.Shared.GenericRepos
         IQueryable<T> GetAll();
 
         IQueryable<T> GetByIdQueryable(Guid id);
+
+        Task<T> GetByCriteriaAsync(Expression<Func<T,bool>> expression);
 
         void SaveInclude(T entity);
 

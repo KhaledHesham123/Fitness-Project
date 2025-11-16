@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Linq;
+using System.Linq.Expressions;
 using WorkoutCatalogService.Data.Context;
 using WorkoutCatalogService.Shared.Entites;
 
@@ -27,6 +28,12 @@ namespace WorkoutCatalogService.Shared.GenericRepos
         {
             return _dbContext.Set<T>().Where(e =>e.Id == id&&e.IsDeleted==false).AsQueryable();
 
+
+        }
+
+        public async Task<T> GetByCriteriaAsync(Expression<Func<T, bool>> expression)
+        {
+            return await _dbContext.Set<T>().Where(expression).FirstAsync();
 
         }
         public async Task addAsync(T item)
@@ -100,6 +107,5 @@ namespace WorkoutCatalogService.Shared.GenericRepos
         }
 
        
-        
     }
 }
