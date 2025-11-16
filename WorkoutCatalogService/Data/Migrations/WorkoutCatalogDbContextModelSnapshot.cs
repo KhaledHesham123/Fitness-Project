@@ -168,21 +168,17 @@ namespace WorkoutCatalogService.Data.Migrations
 
             modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.PlanWorkout", b =>
                 {
-                    b.HasOne("WorkoutCatalogService.Shared.Entites.Workout", "Workout")
+                    b.HasOne("WorkoutCatalogService.Shared.Entites.Workout", null)
                         .WithMany("PlanWorkout")
                         .HasForeignKey("ExerciseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WorkoutCatalogService.Shared.Entites.Plan", "WorkoutPlan")
+                    b.HasOne("WorkoutCatalogService.Shared.Entites.Plan", null)
                         .WithMany("PlanWorkout")
                         .HasForeignKey("WorkoutPlanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Workout");
-
-                    b.Navigation("WorkoutPlan");
                 });
 
             modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.SubCategory", b =>

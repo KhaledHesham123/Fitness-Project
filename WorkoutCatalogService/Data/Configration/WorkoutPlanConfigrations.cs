@@ -12,7 +12,7 @@ namespace WorkoutCatalogService.Data.Configration
                HasConversion(DifficultyLevel => DifficultyLevel.ToString()
                , dbValue => (DifficultyLevel)Enum.Parse(typeof(DifficultyLevel), dbValue));
 
-            builder.HasMany(x=>x.PlanWorkout).WithOne(x=>x.WorkoutPlan).HasForeignKey(x=>x.WorkoutPlanId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(x=>x.PlanWorkout).WithOne().HasForeignKey(x=>x.WorkoutPlanId).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

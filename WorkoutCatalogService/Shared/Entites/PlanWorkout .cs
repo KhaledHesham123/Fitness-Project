@@ -7,9 +7,7 @@
 
 
         public Guid WorkoutPlanId { get; set; }
-        public Plan WorkoutPlan { get; set; } = null!;
 
         public Guid ExerciseId { get; set; }
-        public Workout Workout { get; set; } = null!;
     }
 }

@@ -3,7 +3,7 @@
     public class RequestResponse<T>
     {
 
-        private T Data { get; set; }
+        public T Data { get; set; }
         private string Message { get; set; }
         private bool IsSuccess { get; set; }
         private int StatusCode { get; set; }
