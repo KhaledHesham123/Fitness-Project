@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace UserProfileService.intialCreat.Data.Migrations
+namespace UserProfileService.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class create2 : Migration
+    public partial class create1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,7 +24,7 @@ namespace UserProfileService.intialCreat.Data.Migrations
                     Weight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Height = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     FitnessGoal = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ActivityLevel = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    planid = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>

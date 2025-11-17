@@ -4,7 +4,7 @@ using NutritionService.Data.Context;
 using NutritionService.Models;
 using System.Linq.Expressions;
 
-namespace NutritionService.Data
+namespace NutritionService.Shared
 {
     public class Repository<T> : IRepository<T> where T : BaseEntity, new()
     {

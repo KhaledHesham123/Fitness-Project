@@ -28,7 +28,8 @@
 
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
-    <Folder Include="Feature\" />
+    <Folder Include="Feature\UserProfile\CQRS\Commends\" />
+    <Folder Include="Feature\UserProfile\CQRS\Quries\" />
   </ItemGroup>
 
 </Project>

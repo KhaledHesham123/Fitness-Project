@@ -12,8 +12,8 @@ using WorkoutCatalogService.Data.Context;
 namespace WorkoutCatalogService.Data.Migrations
 {
     [DbContext(typeof(WorkoutCatalogDbContext))]
-    [Migration("20251109192023_intialCreat")]
-    partial class intialCreat
+    [Migration("20251116171457_create1")]
+    partial class create1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,91 @@ namespace WorkoutCatalogService.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.Exercise", b =>
+            modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.Plan", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.PrimitiveCollection<string>("AssignedUserIds")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DifficultyLevel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Plan");
+                });
+
+            modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.PlanWorkout", b =>
+                {
+                    b.Property<Guid>("WorkoutPlanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ExerciseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Reps")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Sets")
+                        .HasColumnType("int");
+
+                    b.HasKey("WorkoutPlanId", "ExerciseId");
+
+                    b.HasIndex("ExerciseId");
+
+                    b.ToTable("PlanWorkout");
+                });
+
+            modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.SubCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("SubCategory");
+                });
+
+            modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.Workout", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -60,87 +144,7 @@ namespace WorkoutCatalogService.Data.Migrations
 
                     b.HasIndex("SubCategoryId");
 
-                    b.ToTable("Exercises");
-                });
-
-            modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.SubCategory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("SubCategory");
-                });
-
-            modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.WorkoutExercise", b =>
-                {
-                    b.Property<Guid>("WorkoutPlanId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ExerciseId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Reps")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Sets")
-                        .HasColumnType("int");
-
-                    b.HasKey("WorkoutPlanId", "ExerciseId");
-
-                    b.HasIndex("ExerciseId");
-
-                    b.ToTable("WorkoutExercise");
-                });
-
-            modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.WorkoutPlan", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DifficultyLevel")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("WorkoutPlans");
+                    b.ToTable("Workout");
                 });
 
             modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.category", b =>
@@ -165,15 +169,19 @@ namespace WorkoutCatalogService.Data.Migrations
                     b.ToTable("Category");
                 });
 
-            modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.Exercise", b =>
+            modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.PlanWorkout", b =>
                 {
-                    b.HasOne("WorkoutCatalogService.Shared.Entites.SubCategory", "SubCategory")
-                        .WithMany("Exercises")
-                        .HasForeignKey("SubCategoryId")
+                    b.HasOne("WorkoutCatalogService.Shared.Entites.Workout", null)
+                        .WithMany("PlanWorkout")
+                        .HasForeignKey("ExerciseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("SubCategory");
+                    b.HasOne("WorkoutCatalogService.Shared.Entites.Plan", null)
+                        .WithMany("PlanWorkout")
+                        .HasForeignKey("WorkoutPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.SubCategory", b =>
@@ -187,38 +195,30 @@ namespace WorkoutCatalogService.Data.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.WorkoutExercise", b =>
+            modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.Workout", b =>
                 {
-                    b.HasOne("WorkoutCatalogService.Shared.Entites.Exercise", "Exercise")
-                        .WithMany("WorkoutExercises")
-                        .HasForeignKey("ExerciseId")
+                    b.HasOne("WorkoutCatalogService.Shared.Entites.SubCategory", "SubCategory")
+                        .WithMany("Workout")
+                        .HasForeignKey("SubCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WorkoutCatalogService.Shared.Entites.WorkoutPlan", "WorkoutPlan")
-                        .WithMany("Exercises")
-                        .HasForeignKey("WorkoutPlanId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Exercise");
-
-                    b.Navigation("WorkoutPlan");
+                    b.Navigation("SubCategory");
                 });
 
-            modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.Exercise", b =>
+            modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.Plan", b =>
                 {
-                    b.Navigation("WorkoutExercises");
+                    b.Navigation("PlanWorkout");
                 });
 
             modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.SubCategory", b =>
                 {
-                    b.Navigation("Exercises");
+                    b.Navigation("Workout");
                 });
 
-            modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.WorkoutPlan", b =>
+            modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.Workout", b =>
                 {
-                    b.Navigation("Exercises");
+                    b.Navigation("PlanWorkout");
                 });
 
             modelBuilder.Entity("WorkoutCatalogService.Shared.Entites.category", b =>
