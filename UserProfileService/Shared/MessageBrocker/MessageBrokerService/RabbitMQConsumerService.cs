@@ -20,15 +20,13 @@ namespace UserProfileService.Shared.MessageBrocker.MessageBrokerService
             _connection = factory.CreateConnectionAsync().Result;
             _channel = _connection.CreateChannelAsync().Result;
 
-            // _channel.BasicGetAsync() // pull mechanism
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             var consumer = new AsyncEventingBasicConsumer(_channel);
-            consumer.ReceivedAsync += Consumer_ReceivedAync; // push mechanism
-            await _channel.BasicConsumeAsync("Added_Products", false, consumer);
-            await _channel.BasicConsumeAsync("Deleted_Products", false, consumer);
+            consumer.ReceivedAsync += Consumer_ReceivedAync; 
+          //  await _channel.BasicConsumeAsync("", false, consumer); to do
         }
 
         private async Task Consumer_ReceivedAync(object sender, BasicDeliverEventArgs @event)
