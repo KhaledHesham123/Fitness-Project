@@ -1,0 +1,8 @@
+using IdentityService.Shared.Entities;
+using MediatR;
+using System.Linq.Expressions;
+
+namespace IdentityService.Features.Shared.CheckExist
+{
+    public record CheckExistQuery<T>(Expression<Func<T, bool>> Predicate) : IRequest<Result<bool>> where T : BaseEntity;
+}

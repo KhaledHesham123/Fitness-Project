@@ -1,9 +1,11 @@
-﻿using IdentityService.Shared.Entities;
+﻿using IdentityService.Features.Authantication;
+using IdentityService.Shared.Entities;
 
 namespace IdentityService.Shared.JWTService
 {
     public interface IJwtService
     {
-        Task<string> CreateToken(User user , IList<UserClaim> claims);
+        Task<AuthModel> GenerateAccessTokenAsync(User user);
+        RefreshToken GenerateRefreshToken();
     }
 }

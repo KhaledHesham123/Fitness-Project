@@ -19,7 +19,7 @@ namespace IdentityService.Data.DBContexts
         public DbSet<UserRole> UserRoles => Set<UserRole>();
         public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
         public DbSet<UserPermission> UserPermissions => Set<UserPermission>();
-        public DbSet<UserClaim> UserClaims => Set<UserClaim>();
+        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
