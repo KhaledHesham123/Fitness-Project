@@ -16,7 +16,14 @@ namespace WorkoutCatalogService.Shared.MessageBrocker.MessageBrokerService
         {
             _mediator = mediator;
 
-            var factory = new ConnectionFactory() { HostName = "localhost" };
+            var factory = new ConnectionFactory()
+            {
+                HostName = "localhost",
+                Port = 5673,
+                UserName = "admin",
+                Password = "admin123",
+                VirtualHost = "/"
+            };
             _connection = factory.CreateConnectionAsync().Result;
             _channel = _connection.CreateChannelAsync().Result;
 
@@ -27,8 +34,7 @@ namespace WorkoutCatalogService.Shared.MessageBrocker.MessageBrokerService
         {
             var consumer = new AsyncEventingBasicConsumer(_channel);
             consumer.ReceivedAsync += Consumer_ReceivedAync; // push mechanism
-            await _channel.BasicConsumeAsync("Added_Products", false, consumer);
-            await _channel.BasicConsumeAsync("Deleted_Products", false, consumer);
+            await _channel.BasicConsumeAsync("workoutservice.plan.created.queue", false, consumer);
         }
 
         private async Task Consumer_ReceivedAync(object sender, BasicDeliverEventArgs @event)
