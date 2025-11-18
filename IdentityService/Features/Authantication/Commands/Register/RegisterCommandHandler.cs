@@ -1,6 +1,7 @@
 ﻿using IdentityService.Features.Shared;
 using IdentityService.Features.Shared.CheckExist;
 using IdentityService.Shared.Entities;
+using IdentityService.Shared.Enums;
 using IdentityService.Shared.Interfaces;
 using MediatR;
 using System.Security.Claims;
@@ -11,11 +12,13 @@ namespace IdentityService.Features.Authantication.Commands.Register
     {
         private readonly IRepository<User> _userRepository;
         private readonly IMediator _mediator;
+        private readonly IAuthService _authService;
 
-        public RegisterCommandHandler(IRepository<User> userRepository, IMediator mediator)
+        public RegisterCommandHandler(IRepository<User> userRepository, IMediator mediator, IAuthService authService)
         {
             _userRepository = userRepository;
             _mediator = mediator;
+            _authService = authService;
         }
         public async Task<Result<string>> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
@@ -27,21 +30,19 @@ namespace IdentityService.Features.Authantication.Commands.Register
             if (phoneResult.Success)
                 return Result<string>.FailResponse("phone number already exist");
 
+            var hashedPassword = await _authService.GeneratePasswordHashAsync(request.Password);
+
             var user = new User
             {
                 Email = request.Email,
-                HashPassword = request.Password,
+                HashPassword = hashedPassword,
                 PhoneNumber = request.PhoneNumber
             };
+
+            user.UserRoles.Add(new UserRole { RoleId = RoleType.Trainee });
             await _userRepository.AddAsync(user);
 
-            //var Claims = new List<UserClaim>();
-            //Claims.Add(new UserClaim(user, ClaimTypes.NameIdentifier, user.Id.ToString()));
-            //Claims.Add(new UserClaim(user, ClaimTypes.Email, user.Email));
-            //Claims.Add(new UserClaim(user, ClaimTypes.Role, "Student"));
-
-            //await _userRepository.AddClaimsAsync(Claims);
-            return Result<string>.SuccessResponse("Email created successfully");
+            return Result<string>.SuccessResponse(user.Email, "Email created successfully");
         }
     }
 }

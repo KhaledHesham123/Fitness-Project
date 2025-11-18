@@ -10,6 +10,7 @@ using IdentityService.Shared.Entities;
 using IdentityService.Shared.Interfaces;
 using IdentityService.Shared.Middlewares;
 using IdentityService.Shared.Repositories;
+using IdentityService.Shared.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -71,6 +72,8 @@ namespace IdentityService
             }
             #endregion
 
+
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
             builder.Services.AddAuthentication(option =>
             {

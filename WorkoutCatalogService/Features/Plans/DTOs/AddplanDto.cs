@@ -9,6 +9,7 @@ namespace WorkoutCatalogService.Features.Plans.DTOs
         public string Description { get; set; } = string.Empty;
         public DifficultyLevel DifficultyLevel { get; set; }
 
+        public Guid AssignedUserIds {  get; set; }
 
         public ICollection<Guid> ExerciseId { get; set; } = new HashSet<Guid>();
 

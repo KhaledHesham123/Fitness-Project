@@ -1,5 +1,7 @@
 ﻿
+using Microsoft.Identity.Client;
 using RabbitMQ.Client;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace WorkoutCatalogService.Shared.MessageBrocker.MessageBrokerService
 {
@@ -7,12 +9,37 @@ namespace WorkoutCatalogService.Shared.MessageBrocker.MessageBrokerService
     {
         IConnection _connection;
         IChannel _channel;
-        public MessageBrokerPublisher()
-        {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
-            _connection = factory.CreateConnectionAsync().Result;
-            _channel = _connection.CreateChannelAsync().Result;
+        private readonly ILogger<MessageBrokerPublisher> logger;
+        private readonly ConnectionFactory _factory;
 
+
+        public MessageBrokerPublisher(ILogger<MessageBrokerPublisher> logger)
+
+        {
+            this.logger = logger;
+
+
+            _factory = new ConnectionFactory() { 
+                HostName = "localhost",
+                Port= 5672,
+                UserName = "admin",
+                Password = "admin123",
+                VirtualHost = "/"
+            };
+
+            try
+            {
+                _connection = _factory.CreateConnectionAsync().Result;
+                logger.LogInformation("Connected to RabbitMQ");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(" RabbitMQ connection error",ex);
+            }
+
+            
+
+            _channel = _connection.CreateChannelAsync().Result;
 
         }
 
