@@ -10,16 +10,13 @@
 
 	<ItemGroup>
 	  <Compile Remove="Shared\DTOs\**" />
-	  <Compile Remove="Shared\Enums\**" />
 	  <Content Remove="Shared\DTOs\**" />
-	  <Content Remove="Shared\Enums\**" />
 	  <EmbeddedResource Remove="Shared\DTOs\**" />
-	  <EmbeddedResource Remove="Shared\Enums\**" />
 	  <None Remove="Shared\DTOs\**" />
-	  <None Remove="Shared\Enums\**" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.8" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.6" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
@@ -47,10 +44,6 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-	</ItemGroup>
-	
-	<ItemGroup>
-	  <Folder Include="Features\Authantication\CQRS\Queries\" />
 	</ItemGroup>
 
 </Project>

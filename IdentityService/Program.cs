@@ -1,6 +1,17 @@
+using FluentValidation;
 using IdentityService.Authorization;
 using IdentityService.Data.DBContexts;
 using IdentityService.Data.Seeders;
+using IdentityService.Features.Authantication.Commands.Register;
+using IdentityService.Features.Shared;
+using IdentityService.Features.Shared.CheckExist;
+using IdentityService.Shared.Behaviors;
+using IdentityService.Shared.Entities;
+using IdentityService.Shared.Interfaces;
+using IdentityService.Shared.Middlewares;
+using IdentityService.Shared.Repositories;
+using IdentityService.Shared.Services;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +34,46 @@ namespace IdentityService
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityDatabase"));
             });
+
+            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddValidatorsFromAssembly(typeof(RegisterCommand).Assembly);
+            builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+            builder.Services.AddMediatR(typeof(Program).Assembly);
+
+            builder.Services.AddCors(option => option.AddPolicy("myPolicy", option =>
+            {
+                option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+            }));
+
+            #region Register CheckExistQueryHandlers dynamically
+            // types that should support CheckExistQuery<T>
+            var entityAssembly = typeof(User).Assembly; // adjust if entities in different assembly
+            var entityTypes = entityAssembly.GetTypes()
+                .Where(t => typeof(BaseEntity).IsAssignableFrom(t) && !t.IsAbstract && t.IsClass)
+                .ToList();
+
+            var handlerOpenType = typeof(CheckExistQueryHandler<>);
+            var serviceOpenType = typeof(IRequestHandler<,>);
+            var queryOpenType = typeof(CheckExistQuery<>);
+            var responseType = typeof(Result<bool>);
+
+            foreach (var entityType in entityTypes)
+            {
+                // service: IRequestHandler< CheckExistQuery<entityType>, ResponseResult<bool> >
+                var serviceType = serviceOpenType.MakeGenericType(queryOpenType.MakeGenericType(entityType), responseType);
+
+                // implementation: CheckExistQueryHandler<entityType>
+                var implType = handlerOpenType.MakeGenericType(entityType);
+
+                builder.Services.AddTransient(serviceType, implType);
+            }
+            #endregion
+
+
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
             builder.Services.AddAuthentication(option =>
             {
@@ -56,6 +107,8 @@ namespace IdentityService
             builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
             var app = builder.Build();
+
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             // Seed
             using (var scope = app.Services.CreateScope())
