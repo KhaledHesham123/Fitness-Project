@@ -29,6 +29,12 @@ namespace WorkoutCatalogService.Features.Plans.CQRS.Orchestrator
 
             var plan = await _mediator.Send(new AddPlanCommend(request.AddplanDto,planWorkouts));
 
+            if (!plan.IsSuccess)
+            {
+                return RequestResponse<PalnToReturnDto>.Fail("Something went wrong during adding Plan.", 400);
+
+
+            }
             var planDto = new PalnToReturnDto
             {
                 Name = plan.Data.Name,
@@ -40,7 +46,6 @@ namespace WorkoutCatalogService.Features.Plans.CQRS.Orchestrator
                     Id = pw.Id,
                     Sets = pw.Sets,
                     Reps = pw.Reps,
-                    WorkoutName = "TODO: احصل على اسم الـ Workout لو محتاج"
                 }).ToList()
             };
 

@@ -4,9 +4,9 @@
     {
 
         public T Data { get; set; }
-        private string Message { get; set; }
-        private bool IsSuccess { get; set; }
-        private int StatusCode { get; set; }
+        public string Message { get; set; }
+        public bool IsSuccess { get; set; }
+        public int StatusCode { get; set; }
 
         public RequestResponse(T data, int statusCode = 200, string message = "", bool isSuccess = true)
         {
