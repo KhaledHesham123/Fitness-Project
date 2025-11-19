@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using UserProfileService.Data.Context;
 using UserProfileService.Shared.Entites;
 
@@ -38,6 +39,12 @@ namespace UserProfileService.Shared.GenericRepos
         public async Task<T> GetByCriteriaAsync(Expression<Func<T, bool>> expression)
         {
             return await _dbContext.Set<T>().Where(expression).FirstAsync();
+        }
+
+
+        public  async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.Where(predicate).ToListAsync();
         }
 
 

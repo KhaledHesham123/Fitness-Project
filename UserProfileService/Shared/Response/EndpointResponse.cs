@@ -5,10 +5,10 @@ namespace UserProfileService.Shared.Response
 {
     public class EndpointResponse<T>
     {
-        private T Data { get; set; }
-        private string Message { get; set; }
-        private bool IsSuccess { get; set; }
-        private int StatusCode { get; set; }
+        public T Data { get; set; }
+        public string Message { get; set; }
+        public bool IsSuccess { get; set; }
+        public int StatusCode { get; set; }
 
         public EndpointResponse(T data, int statusCode = 200, string message = "", bool isSuccess = true)
         {
@@ -34,7 +34,7 @@ namespace UserProfileService.Shared.Response
 
         public static EndpointResponse<T> Fail(string message, int statusCode)
         {
-            return new EndpointResponse<T>( statusCode, message, true);
+            return new EndpointResponse<T>( statusCode, message, false);
         }
 
 

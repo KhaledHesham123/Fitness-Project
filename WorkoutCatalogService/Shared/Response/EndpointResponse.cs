@@ -34,7 +34,7 @@ namespace WorkoutCatalogService.Shared.Response
 
         public static EndpointResponse<T> Fail(string message, int statusCode)
         {
-            return new EndpointResponse<T>( statusCode, message, true);
+            return new EndpointResponse<T>( statusCode, message, false);
         }
 
 
