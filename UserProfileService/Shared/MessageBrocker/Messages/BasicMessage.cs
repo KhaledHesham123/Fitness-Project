@@ -1,4 +1,4 @@
-﻿namespace UserProfileService.Shared.MessageBrocker
+﻿namespace UserProfileService.Shared.MessageBrocker.Messages
 {
     public class BasicMessage
     {

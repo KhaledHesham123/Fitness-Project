@@ -10,6 +10,8 @@ namespace UserProfileService.Shared.GenericRepos
         IQueryable<T> GetByIdQueryable(Guid id);
 
         Task<T> GetByCriteriaAsync(Expression<Func<T, bool>> expression);
+        Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
+
 
         void SaveInclude(T entity);
 

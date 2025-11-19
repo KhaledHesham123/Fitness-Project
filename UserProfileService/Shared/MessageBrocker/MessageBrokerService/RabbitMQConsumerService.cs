@@ -4,6 +4,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Reflection.Metadata;
 using System.Text;
+using UserProfileService.Shared.MessageBrocker.Messages;
 
 namespace UserProfileService.Shared.MessageBrocker.MessageBrokerService
 {

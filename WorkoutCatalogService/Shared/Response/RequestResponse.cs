@@ -32,7 +32,7 @@
 
         public static RequestResponse<T> Fail(string message, int statusCode)
         {
-            return new RequestResponse<T>(statusCode, message, true);
+            return new RequestResponse<T>(statusCode, message, false);
         }
     }
 }
