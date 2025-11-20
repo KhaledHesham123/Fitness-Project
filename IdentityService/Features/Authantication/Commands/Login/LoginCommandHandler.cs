@@ -1,5 +1,4 @@
 ﻿using IdentityService.Features.Shared;
-using IdentityService.Features.Shared.CheckExist;
 using IdentityService.Shared.Entities;
 using IdentityService.Shared.Interfaces;
 using MediatR;
@@ -23,11 +22,11 @@ namespace IdentityService.Features.Authantication.Commands.Login
 
             var user = await _userRepository.GetAll().FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
             if (user is null)
-                return Result<AuthModel>.FailResponse("email or password incorect");
+                return Result<AuthModel>.FailResponse("email or password incorect", errors: ["incorect email or password"], statusCode: 401);
 
             var passwordCheck = await _authService.CheckPasswordAsync(user, request.Password);
             if (!passwordCheck)
-                return Result<AuthModel>.FailResponse("email or password incorect");
+                return Result<AuthModel>.FailResponse("email or password incorect", errors: ["incorect email or password"], statusCode: 401);
 
             var tokens = await _authService.GenerateTokensAsync(user);
 

@@ -2,7 +2,7 @@ using IdentityService.Shared.Entities;
 using IdentityService.Shared.Interfaces;
 using MediatR;
 
-namespace IdentityService.Features.Shared.CheckExist
+namespace IdentityService.Features.Shared.Queries.CheckExist
 {
     public class CheckExistQueryHandler<T> : IRequestHandler<CheckExistQuery<T>, Result<bool>> where T : BaseEntity
     {
