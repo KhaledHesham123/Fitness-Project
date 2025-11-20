@@ -74,7 +74,7 @@ namespace IdentityService.Shared.Services
                 return new AuthModel { IsAuthenticated = false };
 
             var token = (await _mediator.Send(new GetRefreshTokenByUserIdQuery(user.Data.Id))).Data;
-            if (!token.IsActive)
+            if (token is null || !token.IsActive)
                 return new AuthModel { IsAuthenticated = false };
 
             token.RevokedOn = DateTime.UtcNow;
