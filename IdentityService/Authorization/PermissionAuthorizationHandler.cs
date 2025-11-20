@@ -1,6 +1,7 @@
 ﻿using IdentityService.Data.DBContexts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace IdentityService.Authorization
 {
@@ -19,7 +20,7 @@ namespace IdentityService.Authorization
             PermissionAuthorizationRequirement requirement)
         {
             // 1) Extract user ID from token
-            var userId = context.User.FindFirst("id")?.Value;
+            var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
                 return;
 

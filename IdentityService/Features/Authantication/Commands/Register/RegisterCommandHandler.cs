@@ -1,5 +1,5 @@
 ﻿using IdentityService.Features.Shared;
-using IdentityService.Features.Shared.CheckExist;
+using IdentityService.Features.Shared.Queries.CheckExist;
 using IdentityService.Shared.Entities;
 using IdentityService.Shared.Enums;
 using IdentityService.Shared.Interfaces;
@@ -24,11 +24,11 @@ namespace IdentityService.Features.Authantication.Commands.Register
         {
             var emailResult = await _mediator.Send(new CheckExistQuery<User>(e => e.Email == request.Email), cancellationToken);
             if (emailResult.Success)
-                return Result<string>.FailResponse("Email already taken");
+                return Result<string>.FailResponse("Email already taken", errors: ["Email already taken"], 409);
 
             var phoneResult = await _mediator.Send(new CheckExistQuery<User>(e => e.PhoneNumber == request.PhoneNumber), cancellationToken);
             if (phoneResult.Success)
-                return Result<string>.FailResponse("phone number already exist");
+                return Result<string>.FailResponse("phone number already exist", errors: ["phone number already exist"], 409);
 
             var hashedPassword = await _authService.GeneratePasswordHashAsync(request.Password);
 
@@ -42,7 +42,7 @@ namespace IdentityService.Features.Authantication.Commands.Register
             user.UserRoles.Add(new UserRole { RoleId = RoleType.Trainee });
             await _userRepository.AddAsync(user);
 
-            return Result<string>.SuccessResponse(user.Email, "Email created successfully");
+            return Result<string>.SuccessResponse(user.Email, "Email created successfully", 201);
         }
     }
 }

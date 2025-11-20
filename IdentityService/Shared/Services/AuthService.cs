@@ -50,7 +50,7 @@ namespace IdentityService.Shared.Services
 
             // ACCESS TOKEN =======================
             var jwt = await CreateJwtTokenAsync(user);
-            authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwt); ;
+            authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwt);
             authModel.TokenExpiresOn = jwt.ValidTo;
 
             // REFRESH TOKEN ======================
@@ -71,16 +71,25 @@ namespace IdentityService.Shared.Services
         {
             var user = await _mediator.Send(new GetUserByRefreshTokenQuery(refreshToken));
             if (!user.Success)
-                return new AuthModel { Message = user.Message };
+                return new AuthModel { IsAuthenticated = false };
 
             var token = (await _mediator.Send(new GetRefreshTokenByUserIdQuery(user.Data.Id))).Data;
             if (!token.IsActive)
-                return new AuthModel { Message = "Invalid refresh token" };
+                return new AuthModel { IsAuthenticated = false };
 
             token.RevokedOn = DateTime.UtcNow;
-            var newTokens = await GenerateTokensAsync(user.Data);
+            //var newTokens = await GenerateTokensAsync(user.Data);      => old 
 
-            return newTokens;
+            var jwt = await CreateJwtTokenAsync(user.Data);
+            AuthModel authModel = new AuthModel
+            {
+                IsAuthenticated = true,
+                Token = new JwtSecurityTokenHandler().WriteToken(jwt),
+                TokenExpiresOn = jwt.ValidTo,
+                RefreshToken = token.Token,
+                RefreshTokenExpiration = token.ExpiresOn
+            };
+            return authModel;
         }
         private RefreshToken GenerateRefreshToken()
         {

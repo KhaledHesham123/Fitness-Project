@@ -15,7 +15,8 @@ namespace IdentityService.Features.Authantication.Queries.GetRefreshTokenByUserI
         }
         public async Task<Result<RefreshToken>> Handle(GetRefreshTokenByUserIdQuery request, CancellationToken cancellationToken)
         {
-            var refreshToken = await _refreshTokenRepository.FirstOrDefaultAsync(rt => rt.UserId == request.userId && rt.IsActive);
+            var refreshToken = await _refreshTokenRepository.FirstOrDefaultAsync(rt => rt.UserId == request.userId && rt.RevokedOn == null &&
+                rt.ExpiresOn > DateTime.UtcNow);
 
             return refreshToken is not null ?
                 Result<RefreshToken>.SuccessResponse(refreshToken, "refresh token retrieved successfully") :
