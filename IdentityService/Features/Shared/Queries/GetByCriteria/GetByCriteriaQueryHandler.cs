@@ -1,11 +1,12 @@
 ﻿using IdentityService.Data.DBContexts;
+using IdentityService.Shared.Entities;
 using IdentityService.Shared.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace IdentityService.Features.Shared.Queries.GetByCriteria
 {
-    public class GetByCriteriaQueryHandler<TRequest, TReaponse> : IRequestHandler<GetByCriteriaQuery<TRequest, TReaponse>, Result<TReaponse>> where TRequest : class
+    public class GetByCriteriaQueryHandler<TRequest, TReaponse> : IRequestHandler<GetByCriteriaQuery<TRequest, TReaponse>, Result<TReaponse>> where TRequest : BaseEntity
     {
         //private readonly IRepository<TRequest> _repository;
         private IdentityDbContext _dbContext;
