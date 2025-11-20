@@ -35,7 +35,7 @@ namespace IdentityService
 
             builder.Services.AddDbContext<IdentityDbContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityDatabase"));
             });
 
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
