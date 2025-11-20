@@ -2,6 +2,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using UserProfileService.Feature.UserProfiles.CQRS.Commends;
+using UserProfileService.Feature.UserProfiles.CQRS.Orchestrators;
 using UserProfileService.Feature.UserProfiles.CQRS.Quries;
 using UserProfileService.Feature.UserProfiles.DTOs;
 using UserProfileService.Shared.Response;
@@ -29,6 +31,18 @@ namespace UserProfileService.Feature.UserProfiles.Controller
             }
 
             return EndpointResponse<IEnumerable<UserToReturnDto>>.Success(user.Data, user.Message, user.StatusCode);
+        }
+
+        [HttpPut]
+        public async Task<EndpointResponse<bool>> UpdateUserProfileImage(Guid id,IFormFile formFile) 
+        {
+            var result = await Mediator.Send(new UpdateUserProfileOrchestrator(id, formFile));
+            if (!result.IsSuccess)
+            {
+                return EndpointResponse<bool>.Fail(result.Message, result.StatusCode);
+            }
+
+            return EndpointResponse<bool>.Success(result.Data, result.Message, result.StatusCode);
         }
     }
 }

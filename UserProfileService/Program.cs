@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using UserProfileService.Data.Context;
 using UserProfileService.Shared.MiddleWares;
+using UserProfileService.Shared.Services.attachmentServices;
 using UserProfileService.Shared.UnitofWorks;
 
 namespace UserProfileService
@@ -31,6 +32,8 @@ namespace UserProfileService
             });
 
             builder.Services.AddScoped<IunitofWork, UnitofWork>();
+
+            builder.Services.AddScoped<IattachmentService,attachmentService>();
 
 
 
