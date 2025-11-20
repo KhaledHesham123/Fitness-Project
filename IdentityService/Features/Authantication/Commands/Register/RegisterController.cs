@@ -26,7 +26,7 @@ namespace IdentityService.Features.Authantication.Commands.Register
                  regiserDTO.PhoneNumber
              ));
             await _unitOfWork.SaveChangesAsync();
-            return response.Success ? Ok(response) : BadRequest(response);
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpGet]

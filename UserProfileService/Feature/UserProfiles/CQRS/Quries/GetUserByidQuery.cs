@@ -5,7 +5,7 @@ using UserProfileService.Shared.Entites;
 using UserProfileService.Shared.GenericRepos;
 using UserProfileService.Shared.Response;
 
-namespace UserProfileService.Feature.UserProfiles.CQRS.Commends
+namespace UserProfileService.Feature.UserProfiles.CQRS.Quries
 {
     public record GetUserByidQuery(Guid id):IRequest<RequestResponse<UserToReturnDto>>;
 
@@ -27,6 +27,7 @@ namespace UserProfileService.Feature.UserProfiles.CQRS.Commends
 
             var MappedUser = new UserToReturnDto
             {
+                Id=user.Id,
                 DateOfBirth = user.DateOfBirth,
                 FirstName = user.FirstName,
                 LastName = user.LastName,

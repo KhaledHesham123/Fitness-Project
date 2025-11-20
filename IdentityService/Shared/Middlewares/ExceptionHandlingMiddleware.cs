@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using IdentityService.Features.Shared;
 
 namespace IdentityService.Shared.Middlewares
 {

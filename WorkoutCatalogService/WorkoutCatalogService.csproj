@@ -41,7 +41,7 @@
     <Folder Include="Features\Category\CQRS\Commends\" />
     <Folder Include="Features\Exercises\" />
     <Folder Include="Features\PlanWorkouts\CQRS\Quries\" />
-    <Folder Include="Features\Plans\CQRS\Quries\" />
+    <Folder Include="Shared\Srvieces\" />
   </ItemGroup>
 
 </Project>

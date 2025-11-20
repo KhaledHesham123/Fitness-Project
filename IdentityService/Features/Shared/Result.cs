@@ -1,22 +1,37 @@
 ﻿namespace IdentityService.Features.Shared
 {
-    public class Result<T>
+    public class Result<TData>
     {
         public bool Success { get; set; }
         public string? Message { get; set; }
-        public T? Data { get; set; }
+        public TData? Data { get; set; }
+        public List<string> Errors { get; set; } = new();
+        public int StatusCode { get; set; }
+        public DateTime Timestamp { get; set; } = DateTime.UtcNow;
 
-        public static Result<T> Response(bool success)
+        public static Result<TData> Response(bool success)
         {
-            return new Result<T> { Success = success };
+            return new Result<TData> { Success = success };
         }
-        public static Result<T> SuccessResponse(T data, string? message = null)
+        public static Result<TData> SuccessResponse(TData data, string? message = null, int statusCode = 200)
         {
-            return new Result<T> { Success = true, Data = data, Message = message };
+            return new Result<TData>
+            {
+                Success = true,
+                Data = data,
+                Message = message,
+                StatusCode = statusCode
+            };
         }
-        public static Result<T> FailResponse(string message)
+        public static Result<TData> FailResponse(string message, List<string>? errors = null, int statusCode = 400)
         {
-            return new Result<T> { Success = false, Message = message };
+            return new Result<TData>
+            {
+                Success = false,
+                Message = message,
+                Errors = errors ?? new List<string>(),
+                StatusCode = statusCode
+            };
         }
     }
 }
