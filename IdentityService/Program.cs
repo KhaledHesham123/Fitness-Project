@@ -10,6 +10,7 @@ using IdentityService.Features.Shared.Queries.GetByCriteria;
 using IdentityService.Shared.Behaviors;
 using IdentityService.Shared.Cofigurations;
 using IdentityService.Shared.Entities;
+using IdentityService.Shared.Extenstions;
 using IdentityService.Shared.Interfaces;
 using IdentityService.Shared.Middlewares;
 using IdentityService.Shared.Repositories;
@@ -35,7 +36,7 @@ namespace IdentityService
 
             builder.Services.AddDbContext<IdentityDbContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityDatabase"));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
@@ -51,67 +52,54 @@ namespace IdentityService
                 option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
             }));
 
-            #region Register CheckExistQueryHandlers dynamically
-            // types that should support CheckExistQuery<T>
+            #region Register Generic Handlers dynamically
+
             var entityAssembly = typeof(User).Assembly; // adjust if entities in different assembly
             var entityTypes = entityAssembly.GetTypes()
                 .Where(t => typeof(BaseEntity).IsAssignableFrom(t) && !t.IsAbstract && t.IsClass)
                 .ToList();
 
-            var handlerOpenType = typeof(CheckExistQueryHandler<>);
-            var serviceOpenType = typeof(IRequestHandler<,>);
-            var queryOpenType = typeof(CheckExistQuery<>);
-            var responseType = typeof(Result<bool>);
+            builder.Services.AddGenericHandlers(
+                 entityTypes,
+                 typeof(CheckExistQuery<>),
+                 typeof(CheckExistQueryHandler<>),
+                 typeof(Result<bool>));
 
-            foreach (var entityType in entityTypes)
-            {
-                // service: IRequestHandler< CheckExistQuery<entityType>, ResponseResult<bool> >
-                var serviceType = serviceOpenType.MakeGenericType(queryOpenType.MakeGenericType(entityType), responseType);
-
-                // implementation: CheckExistQueryHandler<entityType>
-                var implType = handlerOpenType.MakeGenericType(entityType);
-
-                builder.Services.AddTransient(serviceType, implType);
-            }
+            builder.Services.AddGenericHandlers(
+                entityTypes,
+                typeof(GetByCriteriaQuery<,>),
+                typeof(GetByCriteriaQueryHandler<,>),
+                typeof(Result<Guid>),
+                typeof(Guid));
             #endregion
 
             #region Register GetByCriteriaQueryHandler dynamically (Manual Reflection)
 
-            // Map Entities → Projections (DTOs / Key types / Id)
-            var projections = new Dictionary<Type, Type>
-            {
-                { typeof(User), typeof(Guid) },        
-            };
+            //var handlerOpenType1 = typeof(GetByCriteriaQueryHandler<,>);
+            //var serviceOpenType1 = typeof(IRequestHandler<,>);
+            //var queryOpenType1 = typeof(GetByCriteriaQuery<,>);
+            //var resultOpenType = typeof(Result<Guid>);
 
-            var handlerOpenType1 = typeof(GetByCriteriaQueryHandler<,>);
-            var serviceOpenType1 = typeof(IRequestHandler<,>);
-            var queryOpenType1 = typeof(GetByCriteriaQuery<,>);
-            var resultOpenType = typeof(Result<>);
+            //foreach (var entityType in entityTypes)
+            //{
 
-            foreach (var entityType in entityTypes)
-            {
-                if (!projections.ContainsKey(entityType))
-                    continue;
+            //    // Construct: IRequestHandler<GetByCriteriaQuery<TEntity, TResult>, Result<TResult>>
 
-                var resultType = projections[entityType]; // TResponse
+            //    var queryClosedType = queryOpenType1.MakeGenericType(entityType, typeof(Guid));
 
-                // Construct: IRequestHandler<GetByCriteriaQuery<TEntity, TResult>, Result<TResult>>
-                var serviceType = serviceOpenType1.MakeGenericType(
-                    queryOpenType1.MakeGenericType(entityType, resultType),
-                    resultOpenType.MakeGenericType(resultType)
-                );
+            //    var serviceType = serviceOpenType1.MakeGenericType(queryClosedType, resultOpenType);
 
-                // Construct Handler: GetByCriteriaQueryHandler<TEntity, TResult>
-                var implType = handlerOpenType1.MakeGenericType(entityType, resultType);
+            //    // Construct Handler: GetByCriteriaQueryHandler<TEntity, TResult>
+            //    var implType = handlerOpenType1.MakeGenericType(entityType, typeof(Guid));
 
-                builder.Services.AddTransient(serviceType, implType);
-            }
+            //    builder.Services.AddTransient(serviceType, implType);
+            //}
 
             #endregion
 
             builder.Services.Configure<EmailSettings>(
                 builder.Configuration.GetSection("EmailSettings"));
-           
+
             builder.Services.AddTransient<EmailVerificationService>();
 
             builder.Services.AddScoped<IAuthService, AuthService>();
