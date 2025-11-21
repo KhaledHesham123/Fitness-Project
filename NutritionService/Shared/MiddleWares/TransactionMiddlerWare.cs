@@ -1,6 +1,4 @@
-﻿
-using NutritionService.Data.Context;
-using NutritionService.Shared;
+﻿using NutritionService.Shared;
 using NutritionService.Shared.UnitofWorks;
 
 namespace NutritionService.Shared.MiddleWares

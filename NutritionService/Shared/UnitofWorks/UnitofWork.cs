@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using NutritionService.Data.Context;
+using NutritionService.Infrastructure.Persistence.Data;
 
 namespace NutritionService.Shared.UnitofWorks
 {

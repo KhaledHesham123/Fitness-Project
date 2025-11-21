@@ -1,6 +1,6 @@
-﻿using NutritionService.Models.Enumeration;
+﻿using NutritionService.Domain.Enums;
 
-namespace NutritionService.Models
+namespace NutritionService.Domain.Entities
 {
     public class Meal : BaseEntity
     {
@@ -8,15 +8,13 @@ namespace NutritionService.Models
         public string Description { get; set; } = string.Empty;
         public string VideoUrl { get; set; } = string.Empty;
         public MealType MealType { get; set; }
-        public DifficultyLevel DifficultyLevel { get; set; }
+        public DifficultyLevel DifficultyLevel { get; set; } = DifficultyLevel.Beginner;
         public int Calories { get; set; }
         public decimal Protein { get; set; }
         public decimal Carbohydrates { get; set; } 
         public decimal Fat { get; set; } 
         public string ImageUrl { get; set; }
-
-        public virtual ICollection<Ingredient> Ingredients { get; set; }
+        public  ICollection<Ingredient> Ingredients { get; set; }
       
-
     }
 }

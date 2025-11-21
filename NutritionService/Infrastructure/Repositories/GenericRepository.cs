@@ -2,22 +2,20 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using NutritionService.Domain.Entities;
 using NutritionService.Infrastructure.Persistence.Data;
+using NutritionService.Shared.Interfaces;
 using System.Linq.Expressions;
 
-namespace NutritionService.Shared
+namespace NutritionService.Infrastructure.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : BaseEntity, new()
+    public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {
         protected readonly NutritionDbContext _context;
         protected readonly DbSet<T> _dbSet;
 
-        public Repository(NutritionDbContext context)
-
+        public GenericRepository(NutritionDbContext context)
         {
             _context = context;
             _dbSet = context.Set<T>();
-
-
         }
 
         public T Add(T entity)
@@ -55,16 +53,8 @@ namespace NutritionService.Shared
         public IQueryable<T> Get(Expression<Func<T, bool>> expression)
         {
             return _dbSet.Where(expression);
-        }
-        public virtual async Task DeleteAsync(int id)
-        {
-            var entity = await _dbSet.FindAsync(id);
-            if (entity != null)
-            {
-                entity.IsDeleted = true;
-                _dbSet.Update(entity);
-            }
-        }
+        } 
+
         public void SaveInclude(T entity, params string[] includedProperties)
         {
             var localEntity = _dbSet.Local.FirstOrDefault(e => e.Id == entity.Id);
@@ -93,16 +83,8 @@ namespace NutritionService.Shared
             }
         }
 
-        public void SaveChanges()
-        {
-            _context.SaveChanges();
-        }
+        public void SaveChanges() => _context.SaveChanges();       
+        public async Task SaveChangesAsync() => await _context.SaveChangesAsync();       
 
-        public async Task SaveChangesAsync()
-        {
-            await _context.SaveChangesAsync();
-        }
     }
-
 }
-

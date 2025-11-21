@@ -1,4 +1,4 @@
-﻿using NutritionService.Models;
+﻿using NutritionService.Domain.Entities;
 using System.Linq.Expressions;
 
 namespace NutritionService.Shared

@@ -1,5 +1,4 @@
-﻿
-using RabbitMQ.Client;
+﻿using RabbitMQ.Client;
 
 namespace NutritionService.Shared.MessageBrocker.MessageBrokerService
 {
