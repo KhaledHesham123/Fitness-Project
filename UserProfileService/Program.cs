@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using UserProfileService.Data.Context;
+using UserProfileService.Shared.GenericRepos;
 using UserProfileService.Shared.MiddleWares;
 using UserProfileService.Shared.Services.attachmentServices;
 using UserProfileService.Shared.UnitofWorks;
@@ -38,6 +39,7 @@ namespace UserProfileService
 
 
             builder.Services.AddScoped<TransactionMiddlerWare>();
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             var app = builder.Build();
 

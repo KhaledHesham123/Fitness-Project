@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using NutritionService.Shared.MessageBrocker.Messages;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Reflection.Metadata;
@@ -14,11 +15,9 @@ namespace NutritionService.Shared.MessageBrocker.MessageBrokerService
         public RabbitMQConsumerService(IMediator mediator)
         {
             _mediator = mediator;
-
             var factory = new ConnectionFactory() { HostName = "localhost" };
             _connection = factory.CreateConnectionAsync().Result;
             _channel = _connection.CreateChannelAsync().Result;
-
             // _channel.BasicGetAsync() // pull mechanism
         }
 

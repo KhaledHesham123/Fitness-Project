@@ -4,7 +4,7 @@ using NutritionService.Domain.Entities;
 using NutritionService.Shared.Interfaces;
 using NutritionService.Shared.Response;
 
-namespace NutritionService.Features.GetMealRecommendations
+namespace NutritionService.Features.MealsRecommendations
 {
     public class GetMealRecommendationsQueryHandler(IMealRepository _repository) : IRequestHandler<GetMealRecommendationsQuery, ResponseResult<List<MealRecommendationModelView>>>
     {
@@ -32,7 +32,7 @@ namespace NutritionService.Features.GetMealRecommendations
                                   .ToListAsync();
             if (!meals.Any())
                 return ResponseResult<List<MealRecommendationModelView>>.FailResponse("No Recommended Meals Found");
-            return ResponseResult<List<MealRecommendationModelView>>.SuccessResponse(meals, "Get Recommended Meals Successfully");
+            return ResponseResult<List<MealRecommendationModelView>>.SuccessResponse(meals, "Meal recommendations fetched successfully");
 
         }
     }

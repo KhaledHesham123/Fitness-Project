@@ -13,8 +13,9 @@ namespace NutritionService.Domain.Entities
         public decimal Protein { get; set; }
         public decimal Carbohydrates { get; set; } 
         public decimal Fat { get; set; } 
-        public string ImageUrl { get; set; }
-        public  ICollection<Ingredient> Ingredients { get; set; }
-      
+        public string ImageUrl { get; set; } = string.Empty;
+        public bool isPremium { get; set; } = false;
+        public  ICollection<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
+
     }
 }

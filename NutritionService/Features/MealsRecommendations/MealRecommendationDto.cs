@@ -1,4 +1,4 @@
-﻿namespace NutritionService.Features.GetMealRecommendations
+﻿namespace NutritionService.Features.MealsRecommendations
 {
     public class MealRecommendationDto
     {
