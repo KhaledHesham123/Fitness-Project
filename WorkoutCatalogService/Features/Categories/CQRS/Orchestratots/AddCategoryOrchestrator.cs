@@ -25,7 +25,7 @@ namespace WorkoutCatalogService.Features.Categories.CQRS.Orchestratots
                 return (RequestResponse<bool>.Fail("Category data is null", 400));
             }
 
-            var subcategoryIds = request.CategoryToaddDTO.SubCategories.Select(x => x.Id).ToList();
+            var subcategoryIds = request.CategoryToaddDTO.SubCategories.Select(x => x.id).ToList();
 
             var subcategories = await mediator.Send(new GetAllSubcategoryByidQuery(subcategoryIds));
 

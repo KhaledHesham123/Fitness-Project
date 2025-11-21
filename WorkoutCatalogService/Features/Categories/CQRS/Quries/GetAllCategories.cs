@@ -34,7 +34,6 @@ namespace WorkoutCatalogService.Features.Categories.CQRS.Quries
                     {
                         subCategoriesDto.Add(new SubCategoryDTo
                         {
-                            Id = sc.Id,
                             Name = sc.Name,
                             Description = sc.Description
                         });
@@ -43,7 +42,6 @@ namespace WorkoutCatalogService.Features.Categories.CQRS.Quries
 
                 var categoryDto = new CategoriesDTO
                 {
-                    id = Category.Id,
                     Name = Category.Name,
                     Description = Category.Description,
                     SubCategories = subCategoriesDto

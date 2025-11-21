@@ -5,10 +5,11 @@ namespace WorkoutCatalogService.Features.Workout.DTOs
 {
     public class WorkoutToreturnDto
     {
+        public Guid id { get; set; }
         public string Name { get; set; } = string.Empty;  // like Incline Bench Press
         public string Description { get; set; } = string.Empty;
-        public DifficultyLevel DifficultyLevel { get; set; } = DifficultyLevel.Beginner;
-        public MuscleGroup MuscleGroup { get; set; } = MuscleGroup.FullBody;
+        public string DifficultyLevel { get; set; } 
+        public string MuscleGroup { get; set; } 
         public int DurationMinutes { get; set; }
 
 

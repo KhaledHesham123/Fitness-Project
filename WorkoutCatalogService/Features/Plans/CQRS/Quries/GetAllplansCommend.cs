@@ -35,7 +35,6 @@ namespace WorkoutCatalogService.Features.Plans.CQRS.Quries
                 AssignedUserIds = plan.AssignedUserIds,
                 PlanWorkout = plan.PlanWorkout.Select(pw => new PlanWorkoutToReturnDto
                 {
-                    Id = pw.Id,
                     Sets = pw.Sets,
                     Reps = pw.Reps,
                 }).ToList()

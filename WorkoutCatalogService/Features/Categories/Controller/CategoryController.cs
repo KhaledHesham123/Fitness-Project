@@ -6,6 +6,7 @@ using WorkoutCatalogService.Features.Categories.CQRS.Orchestratots;
 using WorkoutCatalogService.Features.Categories.CQRS.Quries;
 using WorkoutCatalogService.Features.Categories.DTOs;
 using WorkoutCatalogService.Shared.Entites;
+using WorkoutCatalogService.Shared.Response;
 
 namespace WorkoutCatalogService.Features.Categories.Controller
 {
@@ -21,17 +22,39 @@ namespace WorkoutCatalogService.Features.Categories.Controller
         }
 
         [HttpGet("GetAllCategories")] // GET: api/Category/GetAllCategories
-        public async Task<IActionResult> GetAllCategories()
+        public async Task<ActionResult<EndpointResponse<IEnumerable<CategoriesDTO>>>> GetAllCategories()
         {
-            var Categories = await mediator.Send(new GetAllCategories());
-            return Ok(Categories);
+            var categoriesResult = await mediator.Send(new GetAllCategories());
+
+            var response = new EndpointResponse<IEnumerable<CategoriesDTO>>
+            {
+                IsSuccess = categoriesResult.IsSuccess,
+                Message = categoriesResult.Message,
+                Data = categoriesResult.Data
+            };
+
+            if (!categoriesResult.IsSuccess)
+                return BadRequest(response);
+
+            return Ok(response);
         }
 
         [HttpPost("addCategory")] // PUT: api/Category/addCategory
-        public async Task<IActionResult> AddCategory([FromBody] CategoryToaddDTO category)
+        public async Task<ActionResult<EndpointResponse<bool>>> AddCategory([FromBody] CategoryToaddDTO category)
         {
             var result = await mediator.Send(new AddCategoryOrchestrator(category));
-            return Ok(result);
+
+            var response = new EndpointResponse<bool>
+            {
+                IsSuccess = result.IsSuccess,
+                Message = result.Message,
+                Data = result.Data
+            };
+
+            if (!result.IsSuccess)
+                return BadRequest(response);
+
+            return Ok(response);
         }
     }
 }
