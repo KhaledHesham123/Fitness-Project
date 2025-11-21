@@ -36,6 +36,12 @@ namespace WorkoutCatalogService.Shared.GenericRepos
             return await _dbContext.Set<T>().Where(expression).FirstAsync();
 
         }
+
+        public  async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.Where(predicate).ToListAsync();
+        }
+
         public async Task addAsync(T item)
         {
             await _dbContext.Set<T>().AddAsync(item);

@@ -1,11 +1,11 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using WorkoutCatalogService.Features.Category.DTOs;
+using WorkoutCatalogService.Features.Categories.DTOs;
 using WorkoutCatalogService.Shared.Entites;
 using WorkoutCatalogService.Shared.GenericRepos;
 using WorkoutCatalogService.Shared.Response;
 
-namespace WorkoutCatalogService.Features.Category.CQRS.Quries
+namespace WorkoutCatalogService.Features.Categories.CQRS.Quries
 {
     public record GetAllCategories:IRequest<RequestResponse<IEnumerable<CategoriesDTO>>>;
 
