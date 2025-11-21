@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using WorkoutCatalogService.Data.Context;
+using WorkoutCatalogService.Shared.GenericRepos;
 using WorkoutCatalogService.Shared.MiddleWares;
 using WorkoutCatalogService.Shared.UnitofWorks;
 
@@ -28,6 +29,7 @@ namespace WorkoutCatalogService
             {
                 cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly());
             });
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             builder.Services.AddScoped<IunitofWork, UnitofWork>();
 

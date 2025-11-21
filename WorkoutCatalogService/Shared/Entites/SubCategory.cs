@@ -8,7 +8,7 @@
         public Guid CategoryId { get; set; }
         public category Category { get; set; } = null!;
 
-        public ICollection<Exercise> Exercises { get; set; } = new HashSet<Exercise>();
+        public ICollection<Workout> Workout { get; set; } = new HashSet<Workout>();
 
 
     }

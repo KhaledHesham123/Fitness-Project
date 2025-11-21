@@ -8,7 +8,7 @@ namespace WorkoutCatalogService.Data.Configration
     {
         public void Configure(EntityTypeBuilder<SubCategory> builder)
         {
-            builder.HasMany(x => x.Exercises).
+            builder.HasMany(x => x.Workout).
                 WithOne(x => x.SubCategory).HasForeignKey(x => x.SubCategoryId)
                 .OnDelete(DeleteBehavior.Cascade);
 

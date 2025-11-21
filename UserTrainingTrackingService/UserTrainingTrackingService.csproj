@@ -23,7 +23,7 @@
     <Folder Include="Features\" />
     <Folder Include="Migrations\" />
     <Folder Include="Shared\CustomMiddlewares\" />
-    <Folder Include="Shared\Response\" />
+    <Folder Include="Shared\MessageBroker\" />
   </ItemGroup>
 
 </Project>

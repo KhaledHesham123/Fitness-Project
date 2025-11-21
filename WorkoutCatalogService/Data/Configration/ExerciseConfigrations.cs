@@ -4,9 +4,9 @@ using WorkoutCatalogService.Shared.Entites;
 
 namespace WorkoutCatalogService.Data.Configration
 {
-    public class ExerciseConfigrations : IEntityTypeConfiguration<Exercise>
+    public class ExerciseConfigrations : IEntityTypeConfiguration<Workout>
     {
-        public void Configure(EntityTypeBuilder<Exercise> builder)
+        public void Configure(EntityTypeBuilder<Workout> builder)
         {
             builder.Property(x=>x.DifficultyLevel).
                 HasConversion(DifficultyLevel=> DifficultyLevel.ToString()
@@ -16,7 +16,7 @@ namespace WorkoutCatalogService.Data.Configration
                 HasConversion(DifficultyLevel=> DifficultyLevel.ToString()
                 , dbValue => (MuscleGroup)Enum.Parse(typeof(MuscleGroup), dbValue));
 
-            builder.HasMany(x => x.WorkoutExercises).WithOne(x => x.Exercise).HasForeignKey(x => x.ExerciseId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(x => x.PlanWorkout).WithOne().HasForeignKey(x => x.ExerciseId).OnDelete(DeleteBehavior.Cascade);
 
         }
     }

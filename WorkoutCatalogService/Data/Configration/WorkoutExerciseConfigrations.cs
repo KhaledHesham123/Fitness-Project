@@ -4,22 +4,14 @@ using WorkoutCatalogService.Shared.Entites;
 
 namespace WorkoutCatalogService.Data.Configration
 {
-    public class WorkoutExerciseConfigrations : IEntityTypeConfiguration<WorkoutExercise>
+    public class WorkoutExerciseConfigrations : IEntityTypeConfiguration<PlanWorkout>
     {
-        public void Configure(EntityTypeBuilder<WorkoutExercise> builder)
+        public void Configure(EntityTypeBuilder<PlanWorkout> builder)
         {
             builder.HasKey(x => new { x.WorkoutPlanId, x.ExerciseId });
 
 
-            builder.HasOne(x => x.Exercise)
-                   .WithMany(x => x.WorkoutExercises)
-                   .HasForeignKey(x => x.ExerciseId)
-                   .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasOne(x => x.WorkoutPlan)
-       .WithMany(x => x.Exercises)
-       .HasForeignKey(x => x.WorkoutPlanId)
-       .OnDelete(DeleteBehavior.Cascade);
+           
 
 
         }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Linq;
+using System.Linq.Expressions;
 using WorkoutCatalogService.Data.Context;
 using WorkoutCatalogService.Shared.Entites;
 
@@ -29,12 +30,24 @@ namespace WorkoutCatalogService.Shared.GenericRepos
 
 
         }
+
+        public async Task<T> GetByCriteriaAsync(Expression<Func<T, bool>> expression)
+        {
+            return await _dbContext.Set<T>().Where(expression).FirstAsync();
+
+        }
         public async Task addAsync(T item)
         {
             await _dbContext.Set<T>().AddAsync(item);
         }
 
-        public  Task UpdateAsync(T item)
+        public async Task AddRangeAsync(IEnumerable<T> entities)
+        {
+            await _dbSet.AddRangeAsync(entities);
+        }
+
+
+        public Task UpdateAsync(T item)
         {
             _dbContext.Set<T>().Update(item);
             return Task.CompletedTask;
@@ -100,6 +113,5 @@ namespace WorkoutCatalogService.Shared.GenericRepos
         }
 
        
-        
     }
 }
