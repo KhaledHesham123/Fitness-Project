@@ -1,0 +1,22 @@
+using IdentityService.Shared.Entities;
+using IdentityService.Shared.Interfaces;
+using MediatR;
+
+namespace IdentityService.Features.Shared.Queries.CheckExist
+{
+    public class CheckExistQueryHandler<T> : IRequestHandler<CheckExistQuery<T>, Result<bool>> where T : BaseEntity
+    {
+        private readonly IRepository<T> _repository;
+
+        public CheckExistQueryHandler(IRepository<T> repository)
+        {
+            _repository = repository;
+        }
+
+        public async Task<Result<bool>> Handle(CheckExistQuery<T> request, CancellationToken cancellationToken)
+        {
+            var existsEntity = await _repository.ExistsAsync(request.Predicate);
+            return Result<bool>.Response(existsEntity);
+        }
+    }
+}

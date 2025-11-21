@@ -1,4 +1,5 @@
-﻿using UserProfileService.Shared.Entites;
+﻿using System.Linq.Expressions;
+using UserProfileService.Shared.Entites;
 
 namespace UserProfileService.Shared.GenericRepos
 {
@@ -7,6 +8,10 @@ namespace UserProfileService.Shared.GenericRepos
         IQueryable<T> GetAll();
 
         IQueryable<T> GetByIdQueryable(Guid id);
+
+        Task<T> GetByCriteriaAsync(Expression<Func<T, bool>> expression);
+        Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
+
 
         void SaveInclude(T entity);
 

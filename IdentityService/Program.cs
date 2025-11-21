@@ -1,6 +1,21 @@
+﻿using Exam_System.Shared.Services;
+using FluentValidation;
 using IdentityService.Authorization;
 using IdentityService.Data.DBContexts;
 using IdentityService.Data.Seeders;
+using IdentityService.Features.Authantication.Commands.Register;
+using IdentityService.Features.Shared;
+using IdentityService.Features.Shared.Queries.CheckExist;
+using IdentityService.Features.Shared.Queries.GetByCriteria;
+using IdentityService.Shared.Behaviors;
+using IdentityService.Shared.Cofigurations;
+using IdentityService.Shared.Entities;
+using IdentityService.Shared.Extenstions;
+using IdentityService.Shared.Interfaces;
+using IdentityService.Shared.Middlewares;
+using IdentityService.Shared.Repositories;
+using IdentityService.Shared.Services;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -21,8 +36,73 @@ namespace IdentityService
 
             builder.Services.AddDbContext<IdentityDbContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityDatabase"));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddValidatorsFromAssembly(typeof(RegisterCommand).Assembly);
+            builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+            builder.Services.AddMediatR(typeof(Program).Assembly);
+
+            builder.Services.AddCors(option => option.AddPolicy("myPolicy", option =>
+            {
+                option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+            }));
+
+            #region Register Generic Handlers dynamically
+
+            var entityAssembly = typeof(User).Assembly; // adjust if entities in different assembly
+            var entityTypes = entityAssembly.GetTypes()
+                .Where(t => typeof(BaseEntity).IsAssignableFrom(t) && !t.IsAbstract && t.IsClass)
+                .ToList();
+
+            builder.Services.AddGenericHandlers(
+                 entityTypes,
+                 typeof(CheckExistQuery<>),
+                 typeof(CheckExistQueryHandler<>),
+                 typeof(Result<bool>));
+
+            builder.Services.AddGenericHandlers(
+                entityTypes,
+                typeof(GetByCriteriaQuery<,>),
+                typeof(GetByCriteriaQueryHandler<,>),
+                typeof(Result<Guid>),
+                typeof(Guid));
+            #endregion
+
+            #region Register GetByCriteriaQueryHandler dynamically (Manual Reflection)
+
+            //var handlerOpenType1 = typeof(GetByCriteriaQueryHandler<,>);
+            //var serviceOpenType1 = typeof(IRequestHandler<,>);
+            //var queryOpenType1 = typeof(GetByCriteriaQuery<,>);
+            //var resultOpenType = typeof(Result<Guid>);
+
+            //foreach (var entityType in entityTypes)
+            //{
+
+            //    // Construct: IRequestHandler<GetByCriteriaQuery<TEntity, TResult>, Result<TResult>>
+
+            //    var queryClosedType = queryOpenType1.MakeGenericType(entityType, typeof(Guid));
+
+            //    var serviceType = serviceOpenType1.MakeGenericType(queryClosedType, resultOpenType);
+
+            //    // Construct Handler: GetByCriteriaQueryHandler<TEntity, TResult>
+            //    var implType = handlerOpenType1.MakeGenericType(entityType, typeof(Guid));
+
+            //    builder.Services.AddTransient(serviceType, implType);
+            //}
+
+            #endregion
+
+            builder.Services.Configure<EmailSettings>(
+                builder.Configuration.GetSection("EmailSettings"));
+
+            builder.Services.AddTransient<EmailVerificationService>();
+
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
             builder.Services.AddAuthentication(option =>
             {
@@ -56,6 +136,8 @@ namespace IdentityService
             builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
             var app = builder.Build();
+
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             // Seed
             using (var scope = app.Services.CreateScope())

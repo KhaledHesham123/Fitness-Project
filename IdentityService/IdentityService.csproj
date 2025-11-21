@@ -10,24 +10,24 @@
 
 	<ItemGroup>
 	  <Compile Remove="Shared\DTOs\**" />
-	  <Compile Remove="Shared\Enums\**" />
 	  <Content Remove="Shared\DTOs\**" />
-	  <Content Remove="Shared\Enums\**" />
 	  <EmbeddedResource Remove="Shared\DTOs\**" />
-	  <EmbeddedResource Remove="Shared\Enums\**" />
 	  <None Remove="Shared\DTOs\**" />
-	  <None Remove="Shared\Enums\**" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.8" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.6" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
 
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+
+		<PackageReference Include="Scrutor" Version="6.1.0" />
 		<PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
 		<PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
@@ -47,10 +47,6 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-	</ItemGroup>
-	
-	<ItemGroup>
-	  <Folder Include="Features\Authantication\CQRS\Queries\" />
 	</ItemGroup>
 
 </Project>

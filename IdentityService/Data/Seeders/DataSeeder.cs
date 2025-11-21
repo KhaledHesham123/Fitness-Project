@@ -9,7 +9,6 @@ namespace IdentityService.Data.Seeders
         // Define GUIDs as constants for consistent seeding
         private static readonly Guid AdminRoleId = Guid.Parse("a1111111-1111-1111-1111-111111111111");
         private static readonly Guid UserRoleId = Guid.Parse("a2222222-2222-2222-2222-222222222222");
-        private static readonly Guid ManagerRoleId = Guid.Parse("a3333333-3333-3333-3333-333333333333");
 
         private static readonly Guid CreateUserPermId = Guid.Parse("b1111111-1111-1111-1111-111111111111");
         private static readonly Guid DeleteUserPermId = Guid.Parse("b2222222-2222-2222-2222-222222222222");
@@ -46,8 +45,7 @@ namespace IdentityService.Data.Seeders
             var roles = new List<Role>
             {
                 new Role { Id = AdminRoleId, Name = "Admin" },
-                new Role { Id = UserRoleId, Name = "User" },
-                new Role { Id = ManagerRoleId, Name = "Manager" }
+                new Role { Id = UserRoleId, Name = "Trainee" },
             };
 
             await context.Roles.AddRangeAsync(roles);
@@ -82,11 +80,6 @@ namespace IdentityService.Data.Seeders
 
                 // User has limited permissions
                 new RolePermission { RoleId = UserRoleId, PermissionId = ViewUserPermId },
-
-                // Manager has moderate permissions
-                new RolePermission { RoleId = ManagerRoleId, PermissionId = CreateUserPermId },
-                new RolePermission { RoleId = ManagerRoleId, PermissionId = UpdateUserPermId },
-                new RolePermission { RoleId = ManagerRoleId, PermissionId = ViewUserPermId }
             };
 
             await context.RolePermissions.AddRangeAsync(rolePermissions);
