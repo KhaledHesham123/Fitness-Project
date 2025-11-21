@@ -33,6 +33,7 @@ namespace UserProfileService
             });
 
             builder.Services.AddScoped<IunitofWork, UnitofWork>();
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             builder.Services.AddScoped<IattachmentService,attachmentService>();
 

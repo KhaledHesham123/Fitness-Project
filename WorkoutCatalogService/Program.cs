@@ -65,7 +65,7 @@ namespace WorkoutCatalogService
             try
             {
                 _dbcontext.Database.Migrate();
-                //await DbInitializer.InitializeRabbitMQAsync();
+                await DbInitializer.InitializeRabbitMQAsync();
             }
             catch (Exception ex)
             {

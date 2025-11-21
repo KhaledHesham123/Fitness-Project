@@ -17,7 +17,15 @@ namespace UserProfileService.Shared.MessageBrocker.MessageBrokerService
         {
             _mediator = mediator;
 
-            var factory = new ConnectionFactory() { HostName = "localhost" };
+            var factory = new ConnectionFactory()
+            {
+                HostName = "rabbitmq",
+                Port = 5672,
+                UserName = "admin",
+                Password = "admin123",
+                VirtualHost = "/"
+            };
+
             _connection = factory.CreateConnectionAsync().Result;
             _channel = _connection.CreateChannelAsync().Result;
 

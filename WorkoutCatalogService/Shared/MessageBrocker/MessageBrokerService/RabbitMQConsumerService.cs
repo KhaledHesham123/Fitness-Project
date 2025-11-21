@@ -18,7 +18,11 @@ namespace WorkoutCatalogService.Shared.MessageBrocker.MessageBrokerService
 
             var factory = new ConnectionFactory()
             {
+<<<<<<< HEAD
                 HostName = "localhost",
+=======
+                HostName = "rabbitmq",
+>>>>>>> 4ec853d47c1061319e94ea9f5b3fe707e5368999
                 Port = 5672,
                 UserName = "admin",
                 Password = "admin123",
@@ -34,7 +38,7 @@ namespace WorkoutCatalogService.Shared.MessageBrocker.MessageBrokerService
         {
             var consumer = new AsyncEventingBasicConsumer(_channel);
             consumer.ReceivedAsync += Consumer_ReceivedAync; // push mechanism
-            await _channel.BasicConsumeAsync("workoutservice.plan.created.queue", false, consumer);
+            //await _channel.BasicConsumeAsync("workoutservice.plan.created.queue", false, consumer);
         }
 
         private async Task Consumer_ReceivedAync(object sender, BasicDeliverEventArgs @event)
