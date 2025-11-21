@@ -40,6 +40,7 @@
     <Folder Include="Data\Migrations\" />
     <Folder Include="Features\Exercises\" />
     <Folder Include="Features\PlanWorkouts\CQRS\Quries\" />
+    <Folder Include="Features\Workout\CQRS\Commend\" />
     <Folder Include="Shared\Srvieces\" />
   </ItemGroup>
 
