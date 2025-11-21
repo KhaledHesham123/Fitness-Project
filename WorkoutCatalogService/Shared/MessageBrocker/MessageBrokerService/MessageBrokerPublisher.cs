@@ -37,7 +37,7 @@ namespace WorkoutCatalogService.Shared.MessageBrocker.MessageBrokerService
                 logger.LogError(" RabbitMQ connection error",ex);
             }
 
-            
+
 
             _channel = _connection.CreateChannelAsync().Result;
 

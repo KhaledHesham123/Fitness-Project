@@ -4,6 +4,7 @@ using NutritionService.Domain.Entities;
 using NutritionService.Infrastructure.Persistence.Data;
 using NutritionService.Shared.Interfaces;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace NutritionService.Infrastructure.Repositories
 {
@@ -40,20 +41,36 @@ namespace NutritionService.Infrastructure.Repositories
             }
         }
 
-        public async Task<T> GetByIdAsync(int id)
-        {
-            return await _dbSet.FirstOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
-        }
-
+        //public async Task<T> GetByIdAsync(int id)
+        //{
+        //    return await _dbSet.FirstOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
+        //}
         public IQueryable<T> GetAll()
         {
             return _dbSet.Where(e => !e.IsDeleted);
         }
-
         public IQueryable<T> Get(Expression<Func<T, bool>> expression)
         {
             return _dbSet.Where(expression);
-        } 
+        }
+        public IQueryable<T> GetIncluding(params Expression<Func<T, object>>[] includeProperties)
+        {
+            IQueryable<T> query = _dbSet.Where(e => !e.IsDeleted);
+            foreach (var includeProperty in includeProperties)
+            {
+                query = query.Include(includeProperty);
+            }
+            return query;
+        }
+        public async Task<T> GetByConditionWithIncludesAsync(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includeProperties)
+        {
+            IQueryable<T> query = _dbSet;
+            foreach (var includeProperty in includeProperties)
+            {
+                query = query.Include(includeProperty);
+            }
+            return await query.FirstOrDefaultAsync(expression);
+        }
 
         public void SaveInclude(T entity, params string[] includedProperties)
         {
