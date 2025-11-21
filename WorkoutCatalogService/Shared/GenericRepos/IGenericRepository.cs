@@ -11,6 +11,9 @@ namespace WorkoutCatalogService.Shared.GenericRepos
 
         Task<T> GetByCriteriaAsync(Expression<Func<T,bool>> expression);
 
+         Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
+
+
         void SaveInclude(T entity);
 
         Task addAsync(T item);

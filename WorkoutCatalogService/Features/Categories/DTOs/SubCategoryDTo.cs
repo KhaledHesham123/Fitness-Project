@@ -1,6 +1,6 @@
 ﻿using WorkoutCatalogService.Shared.Entites;
 
-namespace WorkoutCatalogService.Features.Category.DTOs
+namespace WorkoutCatalogService.Features.Categories.DTOs
 {
     public class SubCategoryDTo
     {
