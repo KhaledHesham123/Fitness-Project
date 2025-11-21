@@ -15,9 +15,6 @@ namespace NutritionService.Shared.MessageBrocker.MessageBrokerService
         public RabbitMQConsumerService(IMediator mediator)
         {
             _mediator = mediator;
-<<<<<<< HEAD
-            var factory = new ConnectionFactory() { HostName = "localhost" };
-=======
 
             var factory = new ConnectionFactory()
             {
@@ -28,7 +25,6 @@ namespace NutritionService.Shared.MessageBrocker.MessageBrokerService
                 VirtualHost = "/"
             };
 
->>>>>>> 4ec853d47c1061319e94ea9f5b3fe707e5368999
             _connection = factory.CreateConnectionAsync().Result;
             _channel = _connection.CreateChannelAsync().Result;
             // _channel.BasicGetAsync() // pull mechanism
