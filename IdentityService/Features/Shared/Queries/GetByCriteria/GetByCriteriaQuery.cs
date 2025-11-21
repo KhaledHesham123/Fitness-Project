@@ -1,9 +1,10 @@
-﻿using MediatR;
+﻿using IdentityService.Shared.Entities;
+using MediatR;
 using System.Linq.Expressions;
 
 namespace IdentityService.Features.Shared.Queries.GetByCriteria
 {
-    public class GetByCriteriaQuery<TRequest,TResponse> : IRequest<Result<TResponse>> where TRequest : class
+    public class GetByCriteriaQuery<TRequest,TResponse> : IRequest<Result<TResponse>> where TRequest :  BaseEntity
     {
         public Expression<Func<TRequest, bool>> Criteria { get; set; }
         public Expression<Func<TRequest, TResponse>> Selector { get; set; }

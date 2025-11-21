@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using NutritionService.Data.Context;
+using NutritionService.Infrastructure.Persistence.Data;
 
 #nullable disable
 
 namespace NutritionService.Data.Migrations
 {
     [DbContext(typeof(NutritionDbContext))]
-    partial class NutritionDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251120183438_CraetrNutritionInSqlServerDocker")]
+    partial class CraetrNutritionInSqlServerDocker
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,13 +25,13 @@ namespace NutritionService.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("NutritionService.Models.Ingredient", b =>
+            modelBuilder.Entity("NutritionService.Domain.Entities.Ingredient", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -52,20 +55,49 @@ namespace NutritionService.Data.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.HasIndex("MealId");
 
                     b.ToTable("Ingredients");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            MealId = 1,
+                            Name = "Oats",
+                            Quantity = "1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            MealId = 1,
+                            Name = "Milk",
+                            Quantity = "1"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            MealId = 1,
+                            Name = "Banana",
+                            Quantity = "1"
+                        });
                 });
 
-            modelBuilder.Entity("NutritionService.Models.Meal", b =>
+            modelBuilder.Entity("NutritionService.Domain.Entities.Meal", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Calories")
                         .HasColumnType("int");
@@ -115,14 +147,32 @@ namespace NutritionService.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.ToTable("Meals");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Calories = 600,
+                            Carbohydrates = 75.00m,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "A classic Italian pasta dish with rich meat sauce.",
+                            DifficultyLevel = 2,
+                            Fat = 20.00m,
+                            ImageUrl = "https://example.com/images/spaghetti-bolognese.jpg",
+                            IsDeleted = false,
+                            MealType = 3,
+                            Name = "Spaghetti Bolognese",
+                            Protein = 25.50m,
+                            VideoUrl = "https://example.com/spaghetti-bolognese"
+                        });
                 });
 
-            modelBuilder.Entity("NutritionService.Models.Ingredient", b =>
+            modelBuilder.Entity("NutritionService.Domain.Entities.Ingredient", b =>
                 {
-                    b.HasOne("NutritionService.Models.Meal", "Meal")
+                    b.HasOne("NutritionService.Domain.Entities.Meal", "Meal")
                         .WithMany("Ingredients")
                         .HasForeignKey("MealId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -131,7 +181,7 @@ namespace NutritionService.Data.Migrations
                     b.Navigation("Meal");
                 });
 
-            modelBuilder.Entity("NutritionService.Models.Meal", b =>
+            modelBuilder.Entity("NutritionService.Domain.Entities.Meal", b =>
                 {
                     b.Navigation("Ingredients");
                 });

@@ -1,9 +1,9 @@
-﻿namespace NutritionService.Models
+﻿namespace NutritionService.Domain.Entities
 {
     public class BaseEntity
     {
-        public int ID { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public int Id { get; set; }
+        public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public bool IsDeleted { get; set; } = false;
     }

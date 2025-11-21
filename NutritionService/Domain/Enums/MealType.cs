@@ -1,4 +1,4 @@
-﻿namespace NutritionService.Models.Enumeration
+﻿namespace NutritionService.Domain.Enums
 {
     public enum MealType
     {

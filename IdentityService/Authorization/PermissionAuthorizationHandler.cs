@@ -43,23 +43,18 @@ namespace IdentityService.Authorization
             // Load permissions assigned via roles
             var rolePermissions = await _context.UserRoles
                 .Where(ur => ur.UserId == userId)
-                .Include(ur => ur.Role)
-                    .ThenInclude(r => r.RolePermissions)
-                        .ThenInclude(rp => rp.Permission)
-                .SelectMany(ur => ur.Role.RolePermissions.Select(rp => rp.Permission.Name))
-                .ToListAsync();
+                .SelectMany(ur => ur.Role.RolePermissions.Select(rp => rp.Permission.Name)).ToListAsync();
 
             #region User Permissions
             //Load direct user permissions(if you support them)
             var directPermissions = await _context.UserPermissions
                 .Where(up => up.UserId == userId)
-                .Include(up => up.Permission)
                 .Select(up => up.Permission.Name)
                 .ToListAsync();
 
             #endregion
-           
-            return new HashSet<string>(rolePermissions);
+
+            return new HashSet<string>(rolePermissions.Union(directPermissions));
         }
     }
 }
