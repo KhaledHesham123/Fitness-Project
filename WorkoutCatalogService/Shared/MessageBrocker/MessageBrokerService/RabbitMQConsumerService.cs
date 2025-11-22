@@ -34,7 +34,7 @@ namespace WorkoutCatalogService.Shared.MessageBrocker.MessageBrokerService
         {
             var consumer = new AsyncEventingBasicConsumer(_channel);
             consumer.ReceivedAsync += Consumer_ReceivedAync; // push mechanism
-            //await _channel.BasicConsumeAsync("workoutservice.plan.created.queue", false, consumer);
+            await _channel.BasicConsumeAsync("workoutservice.plan.created.queue", false, consumer);
         }
 
         private async Task Consumer_ReceivedAync(object sender, BasicDeliverEventArgs @event)

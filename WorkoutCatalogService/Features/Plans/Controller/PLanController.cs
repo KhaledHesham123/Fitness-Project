@@ -23,7 +23,6 @@ namespace WorkoutCatalogService.Features.Plans.Controller
         {
             var plansResult = await mediator.Send(new GetAllplansCommend());
 
-            // تحويل من RequestResponse -> EndpointResponse
             var response = new EndpointResponse<IEnumerable<PalnToReturnDto>>
             {
                 IsSuccess = plansResult.IsSuccess,
@@ -32,9 +31,9 @@ namespace WorkoutCatalogService.Features.Plans.Controller
             };
 
             if (!plansResult.IsSuccess)
-                return BadRequest(response); // 400، أو ممكن NotFound(response) حسب الحالة
+                return BadRequest(response);
 
-            return Ok(response); // 200
+            return Ok(response); 
         }
     }
 }
