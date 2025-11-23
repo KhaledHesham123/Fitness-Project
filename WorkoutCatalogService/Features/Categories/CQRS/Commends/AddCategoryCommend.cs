@@ -4,12 +4,14 @@ using WorkoutCatalogService.Features.Categories.DTOs;
 using WorkoutCatalogService.Shared.Entites;
 using WorkoutCatalogService.Shared.GenericRepos;
 using WorkoutCatalogService.Shared.Response;
+using WorkoutCatalogService.Shared.Srvieces;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WorkoutCatalogService.Features.Categories.CQRS.Commends
 {
-    public record AddCategoryCommend(category category) :IRequest<RequestResponse<bool>>;
+    public record AddCategoryCommend(category category) :IRequest<RequestResponse<Guid>>;
 
-    public class AddCategoryCommendHandler: IRequestHandler<AddCategoryCommend, RequestResponse<bool>>
+    public class AddCategoryCommendHandler: IRequestHandler<AddCategoryCommend, RequestResponse<Guid>>
     {
         private readonly IGenericRepository<category> genericRepository;
 
@@ -17,31 +19,35 @@ namespace WorkoutCatalogService.Features.Categories.CQRS.Commends
         {
             this.genericRepository = genericRepository;
         }
-        public async Task<RequestResponse<bool>> Handle(AddCategoryCommend request, CancellationToken cancellationToken)
+        public async Task<RequestResponse<Guid>> Handle(AddCategoryCommend request, CancellationToken cancellationToken)
         {
-            if (request.category == null)
+
+            try
             {
-                return RequestResponse<bool>.Fail("there is no category", 400);
+                bool isValid = DtoValidator<category>.TryValidate(request.category, out List<string> errors);
+
+                if (!isValid)
+                {
+                    return RequestResponse<Guid>.Fail(string.Join(", ", errors), 400);
+                }
+                var category = new category
+                {
+                    Name = request.category.Name,
+                    Description = request.category.Description,
+                };
+
+                await genericRepository.addAsync(category);
+                await genericRepository.SaveChanges();
+
+                return RequestResponse<Guid>.Success(category.Id, "Category added successfully", 201);
             }
-            var category = new category
+            catch (Exception ex)
             {
-                Name = request.category.Name,
-                Description = request.category.Description,
-                SubCategories = request.category.SubCategories?
-         .Select(sc => new SubCategory
-         {
-             Id = sc.Id,
-             Name = sc.Name,
-             Description = sc.Description
-         })
-         .ToList()
-         ?? new List<SubCategory>()   
-            };
+                return RequestResponse<Guid>.Fail(ex.Message, 400);
 
-            genericRepository.SaveInclude(category);
-            await genericRepository.SaveChanges();
 
-            return await Task.FromResult(RequestResponse<bool>.Success(true));
+            }
+
         }
     }
 

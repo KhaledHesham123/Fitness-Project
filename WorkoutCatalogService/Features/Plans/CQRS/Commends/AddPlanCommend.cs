@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using System.Numerics;
+using WorkoutCatalogService.Features.Categories.DTOs;
 using WorkoutCatalogService.Features.Plans.DTOs;
 using WorkoutCatalogService.Shared.Constants;
 using WorkoutCatalogService.Shared.Entites;
@@ -10,6 +11,7 @@ using WorkoutCatalogService.Shared.MessageBrocker.MessageBrokerService.Messages;
 //using WorkoutCatalogService.Shared.MessageBrocker.MessageBrokerService;
 //using WorkoutCatalogService.Shared.MessageBrocker.MessageBrokerService.Messages;
 using WorkoutCatalogService.Shared.Response;
+using WorkoutCatalogService.Shared.Srvieces;
 
 namespace WorkoutCatalogService.Features.Plans.CQRS.Commends
 {
@@ -27,9 +29,11 @@ namespace WorkoutCatalogService.Features.Plans.CQRS.Commends
         }
         public async Task<RequestResponse<Plan>> Handle(AddPlanCommend request, CancellationToken cancellationToken)
         {
-            if (request.AddplanDto == null)
+            bool isValid = DtoValidator<AddplanDto>.TryValidate(request.AddplanDto, out List<string> errors);
+
+            if (!isValid)
             {
-                return RequestResponse<Plan>.Fail("Something went wrong during adding Plan.", 400);
+                return RequestResponse<Plan>.Fail(string.Join(", ", errors), 400);
             }
 
             try
