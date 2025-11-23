@@ -7,7 +7,7 @@ using WorkoutCatalogService.Features.Categories.DTOs;
 using WorkoutCatalogService.Shared.Entites;
 using WorkoutCatalogService.Shared.GenericRepos;
 using WorkoutCatalogService.Shared.Response;
-using WorkoutCatalogService.Shared.Srvieces;
+using WorkoutCatalogService.Shared.Srvieces.Validation;
 
 namespace WorkoutCatalogService.Features.Categories.CQRS.Commends
 {
@@ -49,7 +49,7 @@ namespace WorkoutCatalogService.Features.Categories.CQRS.Commends
 
             return subCategoryDTos.SelectMany(dto =>
             {
-                DtoValidator<SubCategoryDTo>.TryValidate(dto, out var dtoErrors);
+                RequestValidator<SubCategoryDTo>.TryValidate(dto, out var dtoErrors);
                 return dtoErrors.Select(e => $"Validation failed for DTO '{dto.Name}': {e}");
             }).ToList();
 

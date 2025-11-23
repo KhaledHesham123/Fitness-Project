@@ -35,6 +35,7 @@ namespace WorkoutCatalogService
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             builder.Services.AddScoped<IunitofWork, UnitofWork>();
+            builder.Services.AddHttpClient();
 
 
             builder.Services.AddSingleton<IMessageBrokerPublisher, MessageBrokerPublisher>();
