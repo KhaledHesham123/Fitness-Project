@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WorkoutCatalogService.Shared.Srvieces
+namespace WorkoutCatalogService.Shared.Srvieces.Validation
 {
-    public static class DtoValidator<T>
+    public static class RequestValidator<T>
     {
         public static bool TryValidate(object dto, out List<string> errors)
         {
@@ -14,10 +14,12 @@ namespace WorkoutCatalogService.Shared.Srvieces
             var validationResults = new List<ValidationResult>();
             var context = new ValidationContext(dto);
 
-            bool isValid = System.ComponentModel.DataAnnotations.Validator
+            bool isValid = Validator
                        .TryValidateObject(dto, context, validationResults, true);
             errors = validationResults.Select(r => r.ErrorMessage!).ToList();
             return isValid;
         }
+
+      
     }
 }

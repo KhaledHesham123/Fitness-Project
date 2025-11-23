@@ -34,6 +34,7 @@ namespace WorkoutCatalogService.Features.Categories.CQRS.Quries
                                    .ToList()
                            })
                            .ToListAsync(); 
+
             if (mappedCategories == null)
             {
               return RequestResponse<IEnumerable<CategoriesDTO>>.Fail("Category is empty", 400);

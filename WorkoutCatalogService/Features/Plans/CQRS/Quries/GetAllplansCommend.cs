@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Numerics;
 using WorkoutCatalogService.Features.Plans.DTOs;
 using WorkoutCatalogService.Features.PlanWorkouts.DTOS;
 using WorkoutCatalogService.Shared.Entites;
@@ -20,26 +21,25 @@ namespace WorkoutCatalogService.Features.Plans.CQRS.Quries
         }
         public async Task<RequestResponse<IEnumerable<PalnToReturnDto>>> Handle(GetAllplansCommend request, CancellationToken cancellationToken)
         {
-            var plans = await genericRepository.GetAll().Include(x=>x.PlanWorkout).ToListAsync();
+            var plans = await genericRepository.GetAll().Select(x => new PalnToReturnDto
+            {
+                Name = x.Name,
+                Description = x.Description,
+                DifficultyLevel = x.DifficultyLevel.ToString(),
+                AssignedUserIds = x.AssignedUserIds,
+
+                PlanWorkout = x.PlanWorkout.Select(pw => new PlanWorkoutToReturnDto
+                {
+                    Sets = pw.Sets,
+                    Reps = pw.Reps,
+                }).ToList()}).ToListAsync();
+
 
             if (!plans.Any())
                 return RequestResponse<IEnumerable<PalnToReturnDto>>.Fail("there is no plans",400);
 
-            var mappedplan = new List<PalnToReturnDto>();
-
-            var mappedPlans = plans.Select(plan => new PalnToReturnDto
-            {
-                Name = plan.Name,
-                Description = plan.Description,
-                DifficultyLevel = plan.DifficultyLevel.ToString(),
-                AssignedUserIds = plan.AssignedUserIds,
-                PlanWorkout = plan.PlanWorkout.Select(pw => new PlanWorkoutToReturnDto
-                {
-                    Sets = pw.Sets,
-                    Reps = pw.Reps,
-                }).ToList()
-            }).ToList();
-            return RequestResponse<IEnumerable<PalnToReturnDto>>.Success(mappedPlans, "Plans retrieved successfully", 200);
+            
+            return RequestResponse<IEnumerable<PalnToReturnDto>>.Success(plans, "Plans retrieved successfully", 200);
 
         }
     }

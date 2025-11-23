@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System.Net.Http;
 using System.Numerics;
 using System.Text.Json;
@@ -8,16 +9,19 @@ using WorkoutCatalogService.Features.Plans.CQRS.Commends;
 using WorkoutCatalogService.Features.Plans.DTOs;
 using WorkoutCatalogService.Features.PlanWorkouts.CQRS.Commends;
 using WorkoutCatalogService.Features.PlanWorkouts.DTOS;
+using WorkoutCatalogService.Features.Workout.CQRS.Commend;
+using WorkoutCatalogService.Features.Workout.DTOs;
 using WorkoutCatalogService.Shared.Entites;
 using WorkoutCatalogService.Shared.GenericRepos;
 using WorkoutCatalogService.Shared.Response;
-using WorkoutCatalogService.Shared.Srvieces;
+using WorkoutCatalogService.Shared.Srvieces.Validation;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WorkoutCatalogService.Features.Plans.CQRS.Orchestrator
 {
-    public record AddPlanOrchestrator(AddplanDto AddplanDto, IEnumerable<AddPlanWorkoutDto> AddPlanWorkoutDto) : IRequest<RequestResponse<bool>>;
+    public record AddPlanOrchestrator(AddplanDto Plan, IEnumerable<AddPlanWorkoutDto?> PlanWorkouts, IEnumerable<WorkoutToaddDto?> Workouts) : IRequest<RequestResponse<Guid>>;
 
-    public class AddPlanOrchestratorHandler : IRequestHandler<AddPlanOrchestrator, RequestResponse<bool>>
+    public class AddPlanOrchestratorHandler : IRequestHandler<AddPlanOrchestrator, RequestResponse<Guid>>
     {
         private readonly IMediator _mediator;
         private readonly IConfiguration _configuration;
@@ -29,65 +33,69 @@ namespace WorkoutCatalogService.Features.Plans.CQRS.Orchestrator
             this._configuration = configuration;
             this.genericRepository = genericRepository;
         }
-        public async Task<RequestResponse<bool>> Handle(AddPlanOrchestrator request, CancellationToken cancellationToken)
+        public async Task<RequestResponse<Guid>> Handle(AddPlanOrchestrator request, CancellationToken cancellationToken)
         {
-            bool AddplanDto_isValid = DtoValidator<AddplanDto>.TryValidate(request.AddplanDto, out List<string> addPlanErrors);
-            bool AddPlanWorkoutDto_isValid = DtoValidator<AddplanDto>.TryValidate(request.AddplanDto, out List<string> addPlanWorkoutErrors);
 
-
-            if (!AddplanDto_isValid)
-                return RequestResponse<bool>.Fail(string.Join(", ", addPlanErrors), 400);
-
-            if (!AddPlanWorkoutDto_isValid)
-                return RequestResponse<bool>.Fail(string.Join(", ", addPlanWorkoutErrors), 400);
-
-
-            var planWorkouts = await _mediator.Send(new AddPlanWorkoutCommend(request.AddPlanWorkoutDto));
-
-            var plan = await _mediator.Send(new AddPlanCommend(request.AddplanDto, planWorkouts));
-
-            if (!plan.IsSuccess)
+            try
             {
-                return RequestResponse<bool>.Fail("Something went wrong during adding Plan.", 400);
+                var addplanResult = await _mediator.Send(new AddPlanCommend(request.Plan));
+                if (!addplanResult.IsSuccess)
+                    return RequestResponse<Guid>.Fail(addplanResult.Message, 400);
 
+                var planId = addplanResult.Data;
 
-            }
-            var UserProfileServiceUrl = _configuration["Services:UserProfile"];
-            var httpclient = new HttpClient();
-
-            var response = await httpclient.GetAsync(
-                $"{UserProfileServiceUrl}/UserProfile/GetUsersbyplanid?id={plan.Data.Id}");
-
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                var users = JsonSerializer.Deserialize<IEnumerable<UserToReturnDto>>(content, new JsonSerializerOptions
+                if (request.Workouts != null && request.Workouts.Any())
                 {
-                    PropertyNameCaseInsensitive = true
-                });
-
-
-                if (users != null && users.Any())
-                {
-                    foreach (var user in users)
-                    {
-                        plan.Data.AssignedUserIds.Add(user.Id);
-                    }
-
-
-                    genericRepository.SaveInclude(plan.Data);
-
-                    await genericRepository.SaveChanges();
-
+                    await _mediator.Send(new AddWorkoutsCommend(request.Workouts));
                 }
 
+                if (request.PlanWorkouts != null && request.PlanWorkouts.Any())
+                {
+                    var planWorkouts = request.PlanWorkouts.Select(pw =>
+                    {
+                        pw.WorkoutPlanId = planId; // تأكد إن كل PlanWorkout مربوط بالPlan الجديد
+                        return pw;
+                    });
+
+                    await _mediator.Send(new AddPlanWorkoutCommend(planWorkouts));
+                }
+
+                var UserProfileServiceUrl = _configuration["Services:UserProfile"];
+                var httpclient = new HttpClient();
+
+                var response = await httpclient.GetAsync(
+                    $"{UserProfileServiceUrl}/UserProfile/GetUsersbyplanid?id={planId}");
+
+                IEnumerable<UserToReturnDto> users = Enumerable.Empty<UserToReturnDto>();
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    users = JsonSerializer.Deserialize<IEnumerable<UserToReturnDto>>(content, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    }) ?? Enumerable.Empty<UserToReturnDto>();
+                }
+
+                var planEntity = await genericRepository.GetByIdQueryable(planId).FirstAsync();
+                planEntity.AssignedUserIds = users.Select(u => u.Id).ToList();
+                genericRepository.SaveInclude(planEntity);
+                await genericRepository.SaveChanges();
+
+                return RequestResponse<Guid>.Success(planId, "Full plan created successfully", 201);
+
 
             }
-            return RequestResponse<bool>.Success(true, "Plan added successfully", 200);
+            catch (Exception)
+            {
 
+                throw;
+            }
 
         }
     }
+
+
+
 
     public class UserToReturnDto
     {
