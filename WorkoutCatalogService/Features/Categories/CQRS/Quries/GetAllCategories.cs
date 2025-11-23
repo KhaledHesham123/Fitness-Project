@@ -19,37 +19,26 @@ namespace WorkoutCatalogService.Features.Categories.CQRS.Quries
         }
         public async Task<RequestResponse<IEnumerable<CategoriesDTO>>> Handle(GetAllCategories request, CancellationToken cancellationToken)
         {
-            var Categories = await  _categoryRepo.GetAll().Include(x=>x.SubCategories).ToListAsync();
-            if (Categories==null)
+            var mappedCategories = await _categoryRepo.GetAll()
+                           .Select(x => new CategoriesDTO
+                           {
+                               Name = x.Name,
+                               Description = x.Description,
 
-                return RequestResponse<IEnumerable<CategoriesDTO>>.Fail("Cart is empty", 400);
-            var mappedCategories = new List<CategoriesDTO>();
-
-            foreach (var Category in Categories)
+                               SubCategories = x.SubCategories
+                                   .Select(sc => new SubCategoryDTo
+                                   {
+                                       Name = sc.Name,
+                                       Description = sc.Description
+                                   })
+                                   .ToList()
+                           })
+                           .ToListAsync(); 
+            if (mappedCategories == null)
             {
-                var subCategoriesDto = new List<SubCategoryDTo>();
-                if (Category.SubCategories != null)
-                {
-                    foreach (var sc in Category.SubCategories)
-                    {
-                        subCategoriesDto.Add(new SubCategoryDTo
-                        {
-                            Name = sc.Name,
-                            Description = sc.Description
-                        });
-                    }
-                }
-
-                var categoryDto = new CategoriesDTO
-                {
-                    Name = Category.Name,
-                    Description = Category.Description,
-                    SubCategories = subCategoriesDto
-                };
-
-                mappedCategories.Add(categoryDto);
+              return RequestResponse<IEnumerable<CategoriesDTO>>.Fail("Category is empty", 400);
             }
-
+          
             return RequestResponse<IEnumerable<CategoriesDTO>>.Success(mappedCategories);
 
 

@@ -3,6 +3,7 @@ using WorkoutCatalogService.Features.PlanWorkouts.DTOS;
 using WorkoutCatalogService.Shared.Entites;
 using WorkoutCatalogService.Shared.GenericRepos;
 using WorkoutCatalogService.Shared.Response;
+using WorkoutCatalogService.Shared.Srvieces;
 
 namespace WorkoutCatalogService.Features.PlanWorkouts.CQRS.Commends
 {
@@ -18,7 +19,8 @@ namespace WorkoutCatalogService.Features.PlanWorkouts.CQRS.Commends
         }
         public async Task<IEnumerable<PlanWorkout>> Handle(AddPlanWorkoutCommend request, CancellationToken cancellationToken)
         {
-            if (request.PlanWorkoutDtos == null)
+            bool isvalid= DtoValidator<AddPlanWorkoutDto>.TryValidate(request.PlanWorkoutDtos, out List<string> errors);
+            if (!isvalid)
                 return null;
 
             var PLanWorkouts= new List<PlanWorkout>();

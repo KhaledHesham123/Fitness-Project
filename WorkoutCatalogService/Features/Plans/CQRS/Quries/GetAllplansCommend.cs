@@ -31,7 +31,7 @@ namespace WorkoutCatalogService.Features.Plans.CQRS.Quries
             {
                 Name = plan.Name,
                 Description = plan.Description,
-                DifficultyLevel = plan.DifficultyLevel,
+                DifficultyLevel = plan.DifficultyLevel.ToString(),
                 AssignedUserIds = plan.AssignedUserIds,
                 PlanWorkout = plan.PlanWorkout.Select(pw => new PlanWorkoutToReturnDto
                 {

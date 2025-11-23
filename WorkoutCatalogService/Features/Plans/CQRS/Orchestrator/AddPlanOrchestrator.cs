@@ -11,6 +11,7 @@ using WorkoutCatalogService.Features.PlanWorkouts.DTOS;
 using WorkoutCatalogService.Shared.Entites;
 using WorkoutCatalogService.Shared.GenericRepos;
 using WorkoutCatalogService.Shared.Response;
+using WorkoutCatalogService.Shared.Srvieces;
 
 namespace WorkoutCatalogService.Features.Plans.CQRS.Orchestrator
 {
@@ -30,10 +31,16 @@ namespace WorkoutCatalogService.Features.Plans.CQRS.Orchestrator
         }
         public async Task<RequestResponse<bool>> Handle(AddPlanOrchestrator request, CancellationToken cancellationToken)
         {
-            if (request.AddPlanWorkoutDto == null && request.AddplanDto == null)
-            {
-                return RequestResponse<bool>.Fail("Something went wrong during adding Plan.", 400);
-            }
+            bool AddplanDto_isValid = DtoValidator<AddplanDto>.TryValidate(request.AddplanDto, out List<string> addPlanErrors);
+            bool AddPlanWorkoutDto_isValid = DtoValidator<AddplanDto>.TryValidate(request.AddplanDto, out List<string> addPlanWorkoutErrors);
+
+
+            if (!AddplanDto_isValid)
+                return RequestResponse<bool>.Fail(string.Join(", ", addPlanErrors), 400);
+
+            if (!AddPlanWorkoutDto_isValid)
+                return RequestResponse<bool>.Fail(string.Join(", ", addPlanWorkoutErrors), 400);
+
 
             var planWorkouts = await _mediator.Send(new AddPlanWorkoutCommend(request.AddPlanWorkoutDto));
 

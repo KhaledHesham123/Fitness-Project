@@ -42,7 +42,7 @@ namespace WorkoutCatalogService.Features.Categories.Controller
         [HttpPost("addCategory")] // PUT: api/Category/addCategory
         public async Task<ActionResult<EndpointResponse<bool>>> AddCategory([FromBody] CategoryToaddDTO category)
         {
-            var result = await mediator.Send(new AddCategoryOrchestrator(category));
+            var result = await mediator.Send(new AddCategoryOrchestrator(category.Name,category.Description,category.SubCategories));
 
             var response = new EndpointResponse<bool>
             {
