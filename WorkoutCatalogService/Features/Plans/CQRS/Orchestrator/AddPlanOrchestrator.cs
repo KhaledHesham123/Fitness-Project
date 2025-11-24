@@ -14,7 +14,7 @@ using WorkoutCatalogService.Features.Workout.DTOs;
 using WorkoutCatalogService.Shared.Entites;
 using WorkoutCatalogService.Shared.GenericRepos;
 using WorkoutCatalogService.Shared.Response;
-using WorkoutCatalogService.Shared.Srvieces.Validation;
+using WorkoutCatalogService.Shared.Srvieces;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WorkoutCatalogService.Features.Plans.CQRS.Orchestrator
@@ -53,33 +53,14 @@ namespace WorkoutCatalogService.Features.Plans.CQRS.Orchestrator
                 {
                     var planWorkouts = request.PlanWorkouts.Select(pw =>
                     {
-                        pw.WorkoutPlanId = planId; // تأكد إن كل PlanWorkout مربوط بالPlan الجديد
+                        pw.WorkoutPlanId = planId; 
                         return pw;
                     });
 
                     await _mediator.Send(new AddPlanWorkoutCommend(planWorkouts));
                 }
 
-                var UserProfileServiceUrl = _configuration["Services:UserProfile"];
-                var httpclient = new HttpClient();
-
-                var response = await httpclient.GetAsync(
-                    $"{UserProfileServiceUrl}/UserProfile/GetUsersbyplanid?id={planId}");
-
-                IEnumerable<UserToReturnDto> users = Enumerable.Empty<UserToReturnDto>();
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    users = JsonSerializer.Deserialize<IEnumerable<UserToReturnDto>>(content, new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    }) ?? Enumerable.Empty<UserToReturnDto>();
-                }
-
-                var planEntity = await genericRepository.GetByIdQueryable(planId).FirstAsync();
-                planEntity.AssignedUserIds = users.Select(u => u.Id).ToList();
-                genericRepository.SaveInclude(planEntity);
-                await genericRepository.SaveChanges();
+               
 
                 return RequestResponse<Guid>.Success(planId, "Full plan created successfully", 201);
 
@@ -113,3 +94,27 @@ namespace WorkoutCatalogService.Features.Plans.CQRS.Orchestrator
 
 
 }
+
+
+#region To do
+//var UserProfileServiceUrl = _configuration["Services:UserProfile"];
+//var httpclient = new HttpClient();
+
+//var response = await httpclient.GetAsync(
+//    $"{UserProfileServiceUrl}/UserProfile/GetUsersbyplanid?id={planId}");
+
+//IEnumerable<UserToReturnDto> users = Enumerable.Empty<UserToReturnDto>();
+//if (response.IsSuccessStatusCode)
+//{
+//    var content = await response.Content.ReadAsStringAsync();
+//    users = JsonSerializer.Deserialize<IEnumerable<UserToReturnDto>>(content, new JsonSerializerOptions
+//    {
+//        PropertyNameCaseInsensitive = true
+//    }) ?? Enumerable.Empty<UserToReturnDto>();
+//}
+
+//var planEntity = await genericRepository.GetByIdQueryable(planId).FirstAsync();
+//planEntity.AssignedUserIds = users.Select(u => u.Id).ToList();
+//genericRepository.SaveInclude(planEntity);
+//await genericRepository.SaveChanges(); 
+#endregion

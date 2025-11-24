@@ -4,7 +4,7 @@ using WorkoutCatalogService.Features.PlanWorkouts.DTOS;
 using WorkoutCatalogService.Shared.Entites;
 using WorkoutCatalogService.Shared.GenericRepos;
 using WorkoutCatalogService.Shared.Response;
-using WorkoutCatalogService.Shared.Srvieces.Validation;
+using WorkoutCatalogService.Shared.Srvieces;
 
 namespace WorkoutCatalogService.Features.Plans.CQRS.Quries
 {

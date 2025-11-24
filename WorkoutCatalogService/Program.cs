@@ -1,12 +1,16 @@
 
+using FluentValidation;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using System.Threading.Tasks;
 using WorkoutCatalogService.Data.Context;
+using WorkoutCatalogService.Features.Categories.CQRS.Validators.Commends;
 using WorkoutCatalogService.Shared.GenericRepos;
 using WorkoutCatalogService.Shared.InitializerService;
 using WorkoutCatalogService.Shared.MessageBrocker.MessageBrokerService;
 using WorkoutCatalogService.Shared.MiddleWares;
+using WorkoutCatalogService.Shared.Srvieces.Behaviors;
 using WorkoutCatalogService.Shared.UnitofWorks;
 
 namespace WorkoutCatalogService
@@ -35,11 +39,15 @@ namespace WorkoutCatalogService
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             builder.Services.AddScoped<IunitofWork, UnitofWork>();
+
+
             builder.Services.AddHttpClient();
+
+            builder.Services.AddValidatorsFromAssemblyContaining<AddCategoryValidator>();
+            builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
 
             builder.Services.AddSingleton<IMessageBrokerPublisher, MessageBrokerPublisher>();
-
             builder.Services.AddHostedService<RabbitMQConsumerService>();
             builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 
