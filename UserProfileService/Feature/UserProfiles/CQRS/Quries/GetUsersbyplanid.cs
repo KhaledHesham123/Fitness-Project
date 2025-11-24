@@ -7,7 +7,7 @@ using UserProfileService.Shared.Response;
 
 namespace UserProfileService.Feature.UserProfiles.CQRS.Quries
 {
-    public record GetUsersbyplanid(Guid id):IRequest<RequestResponse<IEnumerable<UserToReturnDto>>>;
+    public record GetUsersbyplanid(IEnumerable<Guid> UserIds) :IRequest<RequestResponse<IEnumerable<UserToReturnDto>>>;
 
     public class classGetUsersbyplanidHandler : IRequestHandler<GetUsersbyplanid, RequestResponse<IEnumerable<UserToReturnDto>>>
     {
@@ -19,10 +19,10 @@ namespace UserProfileService.Feature.UserProfiles.CQRS.Quries
         }
         public async Task<RequestResponse<IEnumerable<UserToReturnDto>>> Handle(GetUsersbyplanid request, CancellationToken cancellationToken)
         {
-            if (request.id == Guid.Empty)
+            if (!request.UserIds.Any())
                 return RequestResponse<IEnumerable<UserToReturnDto>>.Fail("There is  no id",400);
 
-            var users = await genericRepository.FindAsync(x => x.planid == request.id);
+            var users = await genericRepository.FindAsync(x => request.UserIds.Contains(x.Id));
 
             if (users == null || !users.Any())
                 return RequestResponse<IEnumerable<UserToReturnDto>>.Fail("There are no users with this plan id", 404);
@@ -36,12 +36,8 @@ namespace UserProfileService.Feature.UserProfiles.CQRS.Quries
                     Id = user.Id,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
-                    ProfilePictureUrl = user.ProfilePictureUrl,
-                    DateOfBirth = user.DateOfBirth,
-                    Gender = user.Gender,
                     Weight = user.Weight,
                     Height = user.Height,
-                    FitnessGoal = user.FitnessGoal,
                     planid = user.planid,
                 });
             }

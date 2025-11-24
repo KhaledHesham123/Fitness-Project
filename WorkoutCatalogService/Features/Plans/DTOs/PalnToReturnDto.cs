@@ -13,5 +13,7 @@ namespace WorkoutCatalogService.Features.Plans.DTOs
         public ICollection<PlanWorkoutToReturnDto> PlanWorkout { get; set; } = new HashSet<PlanWorkoutToReturnDto>();
 
         public ICollection<Guid> AssignedUserIds { get; set; } = new HashSet<Guid>();
+
+        public IEnumerable<string> UserName { get; set; }
     }
 }

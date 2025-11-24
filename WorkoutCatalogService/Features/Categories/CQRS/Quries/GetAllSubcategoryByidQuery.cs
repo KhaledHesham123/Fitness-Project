@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using WorkoutCatalogService.Features.Categories.DTOs;
 using WorkoutCatalogService.Shared.Entites;
 using WorkoutCatalogService.Shared.GenericRepos;
@@ -12,12 +13,16 @@ namespace WorkoutCatalogService.Features.Categories.CQRS.Quries
     public class GetAllSubcategoryByidQueryHandler: IRequestHandler<GetAllSubcategoryByidQuery, RequestResponse<IEnumerable<SubCategoryDTo>>>
     {
         private readonly IGenericRepository<SubCategory> genericRepository;
-        public GetAllSubcategoryByidQueryHandler(IGenericRepository<SubCategory> genericRepository)
+        private readonly IMemoryCache memoryCache;
+
+        public GetAllSubcategoryByidQueryHandler(IGenericRepository<SubCategory> genericRepository,IMemoryCache memoryCache)
         {
             this.genericRepository = genericRepository;
+            this.memoryCache = memoryCache;
         }
         public async Task<RequestResponse<IEnumerable<SubCategoryDTo>>> Handle(GetAllSubcategoryByidQuery request, CancellationToken cancellationToken)
         {
+           
             var subcategories = await genericRepository.GetAll().Select(sc => new SubCategoryDTo
             {
                 Name = sc.Name,

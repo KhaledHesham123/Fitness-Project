@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using WorkoutCatalogService.Features.Plans.DTOs;
 using WorkoutCatalogService.Features.PlanWorkouts.DTOS;
 using WorkoutCatalogService.Shared.Entites;
@@ -22,11 +23,8 @@ namespace WorkoutCatalogService.Features.Plans.CQRS.Quries
 
         public async Task<RequestResponse<PalnToReturnDto>> Handle(GetPlanbyidQyery request, CancellationToken cancellationToken)
         {
-            if (request.id == Guid.Empty)
-            {
-                return RequestResponse<PalnToReturnDto>.Fail("Plan ID cannot be empty.", 400);
-            }
-            var plan = GenericRepository.GetAll().Where(p => p.Id == request.id).Select(x => new PalnToReturnDto
+           
+            var plan = await GenericRepository.GetAll().Where(p => p.Id == request.id).Select(x => new PalnToReturnDto
             {
                 Name = x.Name,
                 Description = x.Description,
@@ -37,7 +35,7 @@ namespace WorkoutCatalogService.Features.Plans.CQRS.Quries
                     Sets = pw.Sets,
                     Reps = pw.Reps,
                 }).ToList()
-            }).FirstOrDefault();
+            }).FirstOrDefaultAsync();
 
             if (plan == null)
             {

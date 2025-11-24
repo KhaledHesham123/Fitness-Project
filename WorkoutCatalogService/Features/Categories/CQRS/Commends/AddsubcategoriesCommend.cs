@@ -1,5 +1,6 @@
 ﻿using Azure.Core;
 using MediatR;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Tokens.Experimental;
 using System.ComponentModel.DataAnnotations;
@@ -16,27 +17,48 @@ namespace WorkoutCatalogService.Features.Categories.CQRS.Commends
     public class AddsubcategoriesCommendHandler : IRequestHandler<AddsubcategoriesCommend, RequestResponse<IEnumerable<SubCategoryDTo>>>
     {
         private readonly IGenericRepository<SubCategory> genericRepository;
+        private readonly IMemoryCache memoryCache;
 
-        public AddsubcategoriesCommendHandler(IGenericRepository<SubCategory> genericRepository)
+        public AddsubcategoriesCommendHandler(IGenericRepository<SubCategory> genericRepository,IMemoryCache memoryCache)
         {
             this.genericRepository = genericRepository;
+            this.memoryCache = memoryCache;
         }
         public async Task<RequestResponse<IEnumerable<SubCategoryDTo>>> Handle(AddsubcategoriesCommend request, CancellationToken cancellationToken)
         {
 
          
 
-            var mappedSubcategories = request.SubCategoryDTos.Select(dto => new SubCategory
+            var Subcategories = request.SubCategoryDTos.Select(dto => new SubCategory
             {
                 Description = dto.Description,
                 Name = dto.Name,
                 CategoryId = request.CategoryId,
                 
             }).ToList();
-            await genericRepository.AddRangeAsync(mappedSubcategories);
+
+
+            await genericRepository.AddRangeAsync(Subcategories);
             await genericRepository.SaveChanges();
 
-            return RequestResponse<IEnumerable<SubCategoryDTo>>.Success(request.SubCategoryDTos, "subcategories added successfully", 200);
+            foreach (var subcategory in Subcategories) 
+            {
+                memoryCache.Set(subcategory.Id, new SubCategoryDTo
+                {
+                    Name = subcategory.Name,
+                    Description = subcategory.Description,
+                    CategoryId = subcategory.CategoryId
+                }, TimeSpan.FromHours(2));
+            }
+
+                var mappedsubcategories = Subcategories.Select(sc => new SubCategoryDTo
+                {
+                Name = sc.Name,
+                Description = sc.Description,
+                CategoryId = sc.CategoryId
+                });
+
+            return RequestResponse<IEnumerable<SubCategoryDTo>>.Success(mappedsubcategories, "subcategories added successfully", 200);
         }
 
        

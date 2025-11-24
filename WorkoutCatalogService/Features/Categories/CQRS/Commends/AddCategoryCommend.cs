@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Caching.Memory;
 using WorkoutCatalogService.Features.Categories.Controller;
 using WorkoutCatalogService.Features.Categories.DTOs;
 using WorkoutCatalogService.Shared.Entites;
@@ -15,16 +16,26 @@ namespace WorkoutCatalogService.Features.Categories.CQRS.Commends
     {
         private readonly IGenericRepository<category> genericRepository;
 
-        public AddCategoryCommendHandler(IGenericRepository<category> genericRepository)
+        public AddCategoryCommendHandler(IGenericRepository<category> genericRepository, IMemoryCache memoryCache)
         {
             this.genericRepository = genericRepository;
+            MemoryCache = memoryCache;
         }
+
+        public IMemoryCache MemoryCache { get; }
+
         public async Task<RequestResponse<Guid>> Handle(AddCategoryCommend request, CancellationToken cancellationToken)
         {
 
             try
             {
-               
+
+                var existingCategory = await genericRepository.GetByCriteriaAsync(c => c.Name == request.Name);
+                if (existingCategory!=null)
+                {
+                    return RequestResponse<Guid>.Fail("Category with this name already exists", 400);
+                }
+
                 var category = new category
                 {
                     Name = request.Name,
@@ -34,6 +45,16 @@ namespace WorkoutCatalogService.Features.Categories.CQRS.Commends
                 await genericRepository.addAsync(category);
                 await genericRepository.SaveChanges();
 
+                MemoryCache.Set(
+                   category.Id,          
+                   new CategoriesDTO                  
+                   {
+                       Id=category.Id,
+                       Name = category.Name,
+                       Description = category.Description
+                   },
+                   TimeSpan.FromHours(2)              
+               );
                 return RequestResponse<Guid>.Success(category.Id, "Category added successfully", 201);
             }
             catch (Exception ex)

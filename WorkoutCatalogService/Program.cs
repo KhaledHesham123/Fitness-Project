@@ -42,6 +42,7 @@ namespace WorkoutCatalogService
 
 
             builder.Services.AddHttpClient();
+            builder.Services.AddMemoryCache();
 
             builder.Services.AddValidatorsFromAssemblyContaining<AddCategoryValidator>();
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));

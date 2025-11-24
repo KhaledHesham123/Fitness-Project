@@ -15,7 +15,7 @@ using WorkoutCatalogService.Shared.Srvieces;
 
 namespace WorkoutCatalogService.Features.Plans.CQRS.Commends
 {
-    public record AddPlanCommend(AddplanDto AddplanDto) : IRequest<RequestResponse<Guid>>;
+    public record AddPlanCommend(Guid id, string Name, string Description, string DifficultyLevel, IEnumerable<Guid> AssignedUserIds) : IRequest<RequestResponse<Guid>>;
 
     public class AddPlanCommendHandler : IRequestHandler<AddPlanCommend, RequestResponse<Guid>>
     {
@@ -35,11 +35,11 @@ namespace WorkoutCatalogService.Features.Plans.CQRS.Commends
             {
                 var plan = new Plan
                 {
-                    Id = request.AddplanDto.id,
-                    Description = request.AddplanDto.Description,
-                    Name = request.AddplanDto.Name,
-                    DifficultyLevel = Enum.Parse<DifficultyLevel>(request.AddplanDto.DifficultyLevel, true),
-                    AssignedUserIds = request.AddplanDto.AssignedUserIds.ToList()
+                    Id = request.id,
+                    Description = request.Description,
+                    Name = request.Name,
+                    DifficultyLevel = Enum.Parse<DifficultyLevel>(request.DifficultyLevel, true),
+                    AssignedUserIds = request.AssignedUserIds.ToList()
                 };
 
                 await _genericRepository.addAsync(plan);
@@ -48,7 +48,7 @@ namespace WorkoutCatalogService.Features.Plans.CQRS.Commends
                 var msg = new PlanAddedMessage
                 {
                     Type = "PlanAdded",
-                    Userid = request.AddplanDto.AssignedUserIds,
+                    Userid = request.AssignedUserIds,
                     planid = plan.Id,
                 };
                 string TextMessage = System.Text.Json.JsonSerializer.Serialize(msg);

@@ -19,26 +19,25 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WorkoutCatalogService.Features.Plans.CQRS.Orchestrator
 {
-    public record AddPlanOrchestrator(AddplanDto Plan, IEnumerable<AddPlanWorkoutDto?> PlanWorkouts, IEnumerable<WorkoutToaddDto?> Workouts) : IRequest<RequestResponse<Guid>>;
+    public record CreateFullPlanOrchestrator(AddplanDto Plan, IEnumerable<AddPlanWorkoutDto?> PlanWorkouts, IEnumerable<WorkoutToaddDto?> Workouts) : IRequest<RequestResponse<Guid>>;
 
-    public class AddPlanOrchestratorHandler : IRequestHandler<AddPlanOrchestrator, RequestResponse<Guid>>
+    public class CreateFullPlanOrchestratorHandler : IRequestHandler<CreateFullPlanOrchestrator, RequestResponse<Guid>>
     {
         private readonly IMediator _mediator;
         private readonly IConfiguration _configuration;
         private readonly IGenericRepository<Plan> genericRepository;
 
-        public AddPlanOrchestratorHandler(IMediator mediator, IConfiguration configuration, IGenericRepository<Plan> genericRepository)
+        public CreateFullPlanOrchestratorHandler(IMediator mediator, IConfiguration configuration, IGenericRepository<Plan> genericRepository)
         {
             this._mediator = mediator;
             this._configuration = configuration;
             this.genericRepository = genericRepository;
         }
-        public async Task<RequestResponse<Guid>> Handle(AddPlanOrchestrator request, CancellationToken cancellationToken)
+        public async Task<RequestResponse<Guid>> Handle(CreateFullPlanOrchestrator request, CancellationToken cancellationToken)
         {
-
             try
             {
-                var addplanResult = await _mediator.Send(new AddPlanCommend(request.Plan));
+                var addplanResult = await _mediator.Send(new AddPlanCommend(request.Plan.id,request.Plan.Name, request.Plan.Description, request.Plan.DifficultyLevel, request.Plan.AssignedUserIds));
                 if (!addplanResult.IsSuccess)
                     return RequestResponse<Guid>.Fail(addplanResult.Message, 400);
 
@@ -78,43 +77,22 @@ namespace WorkoutCatalogService.Features.Plans.CQRS.Orchestrator
 
 
 
-    public class UserToReturnDto
-    {
-        public Guid Id { get; set; }
-        public string FirstName { get; set; } = string.Empty;
-        public string LastName { get; set; } = string.Empty;
-        public string? ProfilePictureUrl { get; set; }
-        public DateTime DateOfBirth { get; set; }
-        public string Gender { get; set; }
-        public decimal Weight { get; set; }
-        public decimal Height { get; set; }
-        public string FitnessGoal { get; set; }
-        public Guid? PlanId { get; set; }
-    }
+
 
 
 }
 
 
 #region To do
-//var UserProfileServiceUrl = _configuration["Services:UserProfile"];
-//var httpclient = new HttpClient();
 
-//var response = await httpclient.GetAsync(
-//    $"{UserProfileServiceUrl}/UserProfile/GetUsersbyplanid?id={planId}");
-
-//IEnumerable<UserToReturnDto> users = Enumerable.Empty<UserToReturnDto>();
-//if (response.IsSuccessStatusCode)
-//{
-//    var content = await response.Content.ReadAsStringAsync();
-//    users = JsonSerializer.Deserialize<IEnumerable<UserToReturnDto>>(content, new JsonSerializerOptions
-//    {
-//        PropertyNameCaseInsensitive = true
-//    }) ?? Enumerable.Empty<UserToReturnDto>();
-//}
 
 //var planEntity = await genericRepository.GetByIdQueryable(planId).FirstAsync();
 //planEntity.AssignedUserIds = users.Select(u => u.Id).ToList();
 //genericRepository.SaveInclude(planEntity);
 //await genericRepository.SaveChanges(); 
+
+
+
+
+
 #endregion
