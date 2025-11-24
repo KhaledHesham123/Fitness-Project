@@ -7,10 +7,8 @@ namespace WorkoutCatalogService.Features.Plans.DTOs
     {
         public Guid id { get; set; } = Guid.NewGuid();
 
-        [Required(ErrorMessage = "Name is required.")]
         public string Name { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Description is required.")]
         public string Description { get; set; } = string.Empty;
         public string DifficultyLevel { get; set; }
 

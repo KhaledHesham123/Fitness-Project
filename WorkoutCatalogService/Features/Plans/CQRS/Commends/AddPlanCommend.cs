@@ -11,7 +11,7 @@ using WorkoutCatalogService.Shared.MessageBrocker.MessageBrokerService.Messages;
 
 
 using WorkoutCatalogService.Shared.Response;
-using WorkoutCatalogService.Shared.Srvieces.Validation;
+using WorkoutCatalogService.Shared.Srvieces;
 
 namespace WorkoutCatalogService.Features.Plans.CQRS.Commends
 {
@@ -29,13 +29,8 @@ namespace WorkoutCatalogService.Features.Plans.CQRS.Commends
         }
         public async Task<RequestResponse<Guid>> Handle(AddPlanCommend request, CancellationToken cancellationToken)
         {
-            bool isValid = RequestValidator<AddplanDto>.TryValidate(request.AddplanDto, out List<string> errors);
 
-            if (!isValid)
-            {
-                return RequestResponse<Guid>.Fail(string.Join(", ", errors), 400);
-            }
-
+           
             try
             {
                 var plan = new Plan
@@ -46,13 +41,6 @@ namespace WorkoutCatalogService.Features.Plans.CQRS.Commends
                     DifficultyLevel = Enum.Parse<DifficultyLevel>(request.AddplanDto.DifficultyLevel, true),
                     AssignedUserIds = request.AddplanDto.AssignedUserIds.ToList()
                 };
-
-
-
-
-
-
-
 
                 await _genericRepository.addAsync(plan);
                 await _genericRepository.SaveChanges();
