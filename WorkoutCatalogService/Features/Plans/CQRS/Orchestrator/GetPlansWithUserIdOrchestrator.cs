@@ -82,6 +82,7 @@ namespace WorkoutCatalogService.Features.Plans.CQRS.Orchestrator
 
             var respone = await httpclient.PostAsJsonAsync($"{UserProfileServiceUrl}/UserProfile/GetUsersByPlanIds", planids);
 
+
             IEnumerable<UserToReturnDto> users = Enumerable.Empty<UserToReturnDto>();
             if (respone.IsSuccessStatusCode)
             {

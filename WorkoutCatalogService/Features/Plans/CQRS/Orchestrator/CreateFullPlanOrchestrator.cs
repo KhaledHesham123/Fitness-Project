@@ -37,7 +37,7 @@ namespace WorkoutCatalogService.Features.Plans.CQRS.Orchestrator
         {
             try
             {
-                var addplanResult = await _mediator.Send(new AddPlanCommend(request.Plan.id,request.Plan.Name, request.Plan.Description, request.Plan.DifficultyLevel, request.Plan.AssignedUserIds));
+                var addplanResult = await _mediator.Send(new AddPlanCommend(request.Plan.Name, request.Plan.Description, request.Plan.DifficultyLevel, request.Plan.AssignedUserIds));
                 if (!addplanResult.IsSuccess)
                     return RequestResponse<Guid>.Fail(addplanResult.Message, 400);
 

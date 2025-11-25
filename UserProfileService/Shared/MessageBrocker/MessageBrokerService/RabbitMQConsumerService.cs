@@ -35,7 +35,7 @@ namespace UserProfileService.Shared.MessageBrocker.MessageBrokerService
         {
             var consumer = new AsyncEventingBasicConsumer(_channel);
             consumer.ReceivedAsync += Consumer_ReceivedAync; 
-          //  await _channel.BasicConsumeAsync("", false, consumer); to do
+            await _channel.BasicConsumeAsync("workoutservice.plan.created.queue", false, consumer);
         }
 
         private async Task Consumer_ReceivedAync(object sender, BasicDeliverEventArgs @event)
