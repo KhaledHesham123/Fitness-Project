@@ -19,38 +19,40 @@ namespace UserProfileService.Feature.UserProfiles.CQRS.Orchestrators
         }
         public async Task<RequestResponse<bool>> Handle(UpdateUserProfileOrchestrator request, CancellationToken cancellationToken)
         {
-            if (request.userid==Guid.Empty)
-            {
-                return RequestResponse<bool>.Fail("there is no user with this id", 400);
-            }
+            #region TOdo
+            //if (request.userid==Guid.Empty)
+            //{
+            //    return RequestResponse<bool>.Fail("there is no user with this id", 400);
+            //}
 
-            var user = await mediator.Send(new GetUserByidQuery(request.userid));
+            //var user = await mediator.Send(new GetUsersByidQuery(request.userid));
 
-            if (!user.IsSuccess)
-                return RequestResponse<bool>.Fail("there is no user with this id", 400);
+            //if (!user.IsSuccess)
+            //    return RequestResponse<bool>.Fail("there is no user with this id", 400);
 
-            var mappedUser = new UserProfile
-            {
-                DateOfBirth = user.Data.DateOfBirth,
-                FirstName = user.Data.FirstName,
-                FitnessGoal = user.Data.FitnessGoal,
-                Gender = user.Data.Gender,
-                Height = user.Data.Height,
-                Id = user.Data.Id,
-                LastName = user.Data.LastName,
-                planid = user.Data.planid,
-                ProfilePictureUrl = user.Data.ProfilePictureUrl,
-                Weight = user.Data.Weight,
-            };
+            //var mappedUser = new UserProfile
+            //{
+            //    DateOfBirth = user.Data.DateOfBirth,
+            //    FirstName = user.Data.FirstName,
+            //    FitnessGoal = user.Data.FitnessGoal,
+            //    Gender = user.Data.Gender,
+            //    Height = user.Data.Height,
+            //    Id = user.Data.Id,
+            //    LastName = user.Data.LastName,
+            //    planid = user.Data.planid,
+            //    ProfilePictureUrl = user.Data.ProfilePictureUrl,
+            //    Weight = user.Data.Weight,
+            //};
 
-            var result = await mediator.Send(new UpdateUserProfilePictureCommend(mappedUser, request.newImage));
+            //var result = await mediator.Send(new UpdateUserProfilePictureCommend(mappedUser, request.newImage));
 
-            if (!result.IsSuccess)
-            {
-                return RequestResponse<bool>.Fail("some thing wnet wronge with updateing profile picture", 400);
+            //if (!result.IsSuccess)
+            //{
+            //    return RequestResponse<bool>.Fail("some thing wnet wronge with updateing profile picture", 400);
 
-            }
+            //}
 
+            #endregion
             return RequestResponse<bool>.Success(true);
 
         }

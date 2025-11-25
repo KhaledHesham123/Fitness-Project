@@ -15,7 +15,7 @@ using WorkoutCatalogService.Shared.Srvieces;
 
 namespace WorkoutCatalogService.Features.Plans.CQRS.Commends
 {
-    public record AddPlanCommend(Guid id, string Name, string Description, string DifficultyLevel, IEnumerable<Guid> AssignedUserIds) : IRequest<RequestResponse<Guid>>;
+    public record AddPlanCommend( string Name, string Description, string DifficultyLevel, IEnumerable<Guid> AssignedUserIds) : IRequest<RequestResponse<Guid>>;
 
     public class AddPlanCommendHandler : IRequestHandler<AddPlanCommend, RequestResponse<Guid>>
     {
@@ -35,7 +35,7 @@ namespace WorkoutCatalogService.Features.Plans.CQRS.Commends
             {
                 var plan = new Plan
                 {
-                    Id = request.id,
+                    
                     Description = request.Description,
                     Name = request.Name,
                     DifficultyLevel = Enum.Parse<DifficultyLevel>(request.DifficultyLevel, true),

@@ -64,7 +64,7 @@ namespace WorkoutCatalogService.Features.Plans.Controller
         [HttpPost("Addplan")] //api/PLan/Addplan
         public async Task<ActionResult<EndpointResponse<Guid>>> addplan(AddplanDto dto) 
         {
-            var addplanresult= await mediator.Send(new AddPlanCommend(dto.id,dto.Name,dto.Description,dto.DifficultyLevel,dto.AssignedUserIds));
+            var addplanresult= await mediator.Send(new AddPlanCommend(dto.Name,dto.Description,dto.DifficultyLevel,dto.AssignedUserIds));
             var response = new EndpointResponse<Guid> {
                 IsSuccess = addplanresult.IsSuccess,
                 Message = addplanresult.Message,
@@ -103,7 +103,7 @@ namespace WorkoutCatalogService.Features.Plans.Controller
 
 
         [HttpGet("GetPLansWithUsersIds")] //api/PLan/GetPLansWithUsersIds
-        public async Task<ActionResult<EndpointResponse<IEnumerable<PalnToReturnDto>>>> GetPLansWithUsersIds(Guid id)
+        public async Task<ActionResult<EndpointResponse<IEnumerable<PalnToReturnDto>>>> GetPLansWithUsersIds([FromQuery]Guid id)
         {
             var GetPlansResult = await mediator.Send(new GetPlansWithUserIdOrchestrator(id));
             var response = new EndpointResponse<IEnumerable<PalnToReturnDto>>
