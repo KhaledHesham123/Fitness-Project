@@ -19,10 +19,7 @@ namespace WorkoutCatalogService.Features.Workout.CQRS.Commend
         }
         public async Task<RequestResponse<IEnumerable<WorkoutToreturnDto>>> Handle(AddWorkoutsCommend request, CancellationToken cancellationToken)
         {
-            if (request.AddWorkoutDto==null)
-            {
-                return RequestResponse<IEnumerable<WorkoutToreturnDto>>.Fail("error while adding Workout",400);
-            }
+            
 
 
             var workouts = request.AddWorkoutDto.Select(x => new WorkoutCatalogService.Shared.Entites.Workout

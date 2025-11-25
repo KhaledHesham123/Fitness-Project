@@ -3,8 +3,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WorkoutCatalogService.Features.Categories.CQRS.Commends;
 using WorkoutCatalogService.Features.Plans.CQRS.Commends;
+using WorkoutCatalogService.Features.Plans.CQRS.Orchestrator;
 using WorkoutCatalogService.Features.Plans.CQRS.Quries;
 using WorkoutCatalogService.Features.Plans.DTOs;
+using WorkoutCatalogService.Features.PlanWorkouts.DTOS;
+using WorkoutCatalogService.Features.Workout.DTOs;
 using WorkoutCatalogService.Shared.Response;
 
 namespace WorkoutCatalogService.Features.Plans.Controller
@@ -66,6 +69,48 @@ namespace WorkoutCatalogService.Features.Plans.Controller
                 IsSuccess = addplanresult.IsSuccess,
                 Message = addplanresult.Message,
                 Data = addplanresult.Data
+            };
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response);
+
+            }
+            return Ok(response);
+
+
+        }
+
+
+        [HttpPost("CreateFullWorkoutPlan")] //api/PLan/CreateFullWorkoutPlan
+        public async Task<ActionResult<EndpointResponse<Guid>>> CreateFullWorkoutPlan(CreateFullWorkoutPlanRequest request )
+        {
+            var CreatFullWorkoutPlanResult = await mediator.Send(new CreateFullPlanOrchestrator(request.Plan, request.PlanWorkouts, request.Workouts));
+            var response = new EndpointResponse<Guid>
+            {
+                IsSuccess = CreatFullWorkoutPlanResult.IsSuccess,
+                Message = CreatFullWorkoutPlanResult.Message,
+                Data = CreatFullWorkoutPlanResult.Data
+            };
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response);
+
+            }
+            return Ok(response);
+
+
+        }
+
+
+        [HttpGet("GetPLansWithUsersIds")] //api/PLan/GetPLansWithUsersIds
+        public async Task<ActionResult<EndpointResponse<IEnumerable<PalnToReturnDto>>>> GetPLansWithUsersIds(Guid id)
+        {
+            var GetPlansResult = await mediator.Send(new GetPlansWithUserIdOrchestrator(id));
+            var response = new EndpointResponse<IEnumerable<PalnToReturnDto>>
+            {
+                IsSuccess = GetPlansResult.IsSuccess,
+                Message = GetPlansResult.Message,
+                Data = GetPlansResult.Data
             };
             if (!response.IsSuccess)
             {

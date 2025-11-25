@@ -14,6 +14,7 @@ namespace WorkoutCatalogService.Features.Categories.CQRS.Quries
     {
         private readonly IGenericRepository<SubCategory> genericRepository;
         private readonly IMemoryCache memoryCache;
+        private const string CacheKey = "AllSubCategories";
 
         public GetAllSubcategoryByidQueryHandler(IGenericRepository<SubCategory> genericRepository,IMemoryCache memoryCache)
         {
@@ -22,6 +23,10 @@ namespace WorkoutCatalogService.Features.Categories.CQRS.Quries
         }
         public async Task<RequestResponse<IEnumerable<SubCategoryDTo>>> Handle(GetAllSubcategoryByidQuery request, CancellationToken cancellationToken)
         {
+            if (memoryCache.TryGetValue(CacheKey, out IEnumerable<SubCategoryDTo> subcategory))
+            {
+                return RequestResponse<IEnumerable<SubCategoryDTo>>.Success(subcategory);
+            }
            
             var subcategories = await genericRepository.GetAll().Select(sc => new SubCategoryDTo
             {
@@ -29,7 +34,7 @@ namespace WorkoutCatalogService.Features.Categories.CQRS.Quries
                 Description = sc.Description
             }).ToListAsync();
 
-           
+           memoryCache.Set(CacheKey, subcategories);
 
 
             if (subcategories.Count == 0)
