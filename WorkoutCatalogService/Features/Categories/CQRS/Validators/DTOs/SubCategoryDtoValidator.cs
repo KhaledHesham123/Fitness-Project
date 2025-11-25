@@ -15,8 +15,7 @@ namespace WorkoutCatalogService.Features.Categories.CQRS.Validators.DTOs
                 .NotEmpty().WithMessage("SubCategory description is required")
                 .MaximumLength(500).WithMessage("SubCategory description must not exceed 500 characters");
 
-            RuleFor(x => x.CategoryId)
-                .NotEmpty().WithMessage("CategoryId is required");
+            
         }
     }
 }

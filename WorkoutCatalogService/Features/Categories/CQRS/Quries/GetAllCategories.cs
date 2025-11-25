@@ -37,7 +37,6 @@ namespace WorkoutCatalogService.Features.Categories.CQRS.Quries
                                SubCategories = x.SubCategories
                                    .Select(sc => new SubCategoryDTo
                                    {
-                                       id = sc.Id,
                                        Name = sc.Name,
                                        Description = sc.Description
                                    })

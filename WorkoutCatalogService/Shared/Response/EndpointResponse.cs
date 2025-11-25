@@ -10,17 +10,15 @@ namespace WorkoutCatalogService.Shared.Response
         public bool IsSuccess { get; set; }
         public int StatusCode { get; set; }
 
-        public EndpointResponse(T data, int statusCode = 200, string message = "", bool isSuccess = true)
+        public EndpointResponse(T data,  string message = "", bool isSuccess = true)
         {
             Data = data;
-            StatusCode = statusCode;
             Message = message;
             IsSuccess = isSuccess;
         }
-        public EndpointResponse( int statusCode = 200, string message = "", bool isSuccess = true)
+        public EndpointResponse(  string message = "", bool isSuccess = true)
         {
             
-            StatusCode = statusCode;
             Message = message;
             IsSuccess = isSuccess;
         }
@@ -29,12 +27,12 @@ namespace WorkoutCatalogService.Shared.Response
 
         public static EndpointResponse<T> Success(T data, string message = "", int statusCode = 200)
         {
-            return new EndpointResponse<T>(data, statusCode,message, true);
+            return new EndpointResponse<T>(data,message, true);
         }
 
         public static EndpointResponse<T> Fail(string message, int statusCode)
         {
-            return new EndpointResponse<T>( statusCode, message, false);
+            return new EndpointResponse<T>(  message, false);
         }
 
 

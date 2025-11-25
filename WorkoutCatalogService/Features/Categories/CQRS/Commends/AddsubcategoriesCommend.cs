@@ -12,9 +12,9 @@ using WorkoutCatalogService.Shared.Srvieces;
 
 namespace WorkoutCatalogService.Features.Categories.CQRS.Commends
 {
-    public record AddsubcategoriesCommend(Guid CategoryId, IEnumerable<SubCategoryDTo> SubCategoryDTos):IRequest<RequestResponse<IEnumerable<SubCategoryDTo>>>;
+    public record AddsubcategoriesCommend(Guid CategoryId, IEnumerable<SubCategoryDTo> SubCategoryDTos):IRequest<RequestResponse<bool>>;
 
-    public class AddsubcategoriesCommendHandler : IRequestHandler<AddsubcategoriesCommend, RequestResponse<IEnumerable<SubCategoryDTo>>>
+    public class AddsubcategoriesCommendHandler : IRequestHandler<AddsubcategoriesCommend, RequestResponse<bool>>
     {
         private readonly IGenericRepository<SubCategory> genericRepository;
         private readonly IMemoryCache memoryCache;
@@ -24,7 +24,7 @@ namespace WorkoutCatalogService.Features.Categories.CQRS.Commends
             this.genericRepository = genericRepository;
             this.memoryCache = memoryCache;
         }
-        public async Task<RequestResponse<IEnumerable<SubCategoryDTo>>> Handle(AddsubcategoriesCommend request, CancellationToken cancellationToken)
+        public async Task<RequestResponse<bool>> Handle(AddsubcategoriesCommend request, CancellationToken cancellationToken)
         {
 
          
@@ -58,7 +58,7 @@ namespace WorkoutCatalogService.Features.Categories.CQRS.Commends
                 CategoryId = sc.CategoryId
                 });
 
-            return RequestResponse<IEnumerable<SubCategoryDTo>>.Success(mappedsubcategories, "subcategories added successfully", 200);
+            return RequestResponse<bool>.Success(true, "subcategories added successfully", 200);
         }
 
        

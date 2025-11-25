@@ -30,11 +30,11 @@ namespace WorkoutCatalogService.Features.Categories.CQRS.Commends
             try
             {
 
-                var existingCategory = await genericRepository.GetByCriteriaAsync(c => c.Name == request.Name);
-                if (existingCategory!=null)
-                {
-                    return RequestResponse<Guid>.Fail("Category with this name already exists", 400);
-                }
+                //var existingCategory = await genericRepository.GetByCriteriaAsync(c => c.Name == request.Name);
+                //if (existingCategory!=null)
+                //{
+                //    return RequestResponse<Guid>.Fail("Category with this name already exists", 400);
+                //}
 
                 var category = new category
                 {
@@ -49,7 +49,6 @@ namespace WorkoutCatalogService.Features.Categories.CQRS.Commends
                    category.Id,          
                    new CategoriesDTO                  
                    {
-                       Id=category.Id,
                        Name = category.Name,
                        Description = category.Description
                    },
