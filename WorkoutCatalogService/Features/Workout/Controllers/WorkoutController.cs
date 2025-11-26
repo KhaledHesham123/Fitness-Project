@@ -54,7 +54,7 @@ namespace WorkoutCatalogService.Features.Workout.Controllers
         }
 
 
-        [HttpGet("GetRecommendedWorkoutsId")] // GET:   /GetRecommendedWorkoutsId
+        [HttpGet("GetRecommendedWorkouts")] // GET:   /GetRecommendedWorkouts
         public async Task<ActionResult<EndpointResponse<IEnumerable<RecomendedWorkoutsDto>>>> GetRecommendedWorkoutsId( GetRecomendedWorkoutsDto Dto)
         {
             var workoutsResult = await mediator.Send(new GetRecommendedWorkoutsByPlan(Dto.planid,Dto.subcategoryname));
