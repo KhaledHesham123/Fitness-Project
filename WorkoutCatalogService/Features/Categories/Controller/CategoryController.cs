@@ -11,7 +11,7 @@ using WorkoutCatalogService.Shared.Response;
 
 namespace WorkoutCatalogService.Features.Categories.Controller
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
@@ -22,7 +22,7 @@ namespace WorkoutCatalogService.Features.Categories.Controller
             this.mediator = mediator;
         }
 
-        [HttpGet("GetAllCategories")] // GET: api/Category/GetAllCategories
+        [HttpGet("GetAllCategories")] // GET: Category/GetAllCategories
         public async Task<ActionResult<EndpointResponse<IEnumerable<CategoriesDTO>>>> GetAllCategories()
         {
             var categoriesResult = await mediator.Send(new GetAllCategories());
@@ -40,7 +40,7 @@ namespace WorkoutCatalogService.Features.Categories.Controller
             return Ok(response);
         }
 
-        [HttpPost("addCategory")] // Post: api/Category/addCategory
+        [HttpPost("addCategory")] // Post: Category/addCategory
         public async Task<ActionResult<EndpointResponse<bool>>> AddCategory([FromBody] CategoryToaddDTO category)
         {
             var result = await mediator.Send(new AddCategoryOrchestrator(category.Name,category.Description,category.SubCategories));
@@ -59,7 +59,7 @@ namespace WorkoutCatalogService.Features.Categories.Controller
         }
 
 
-        [HttpPost("addSubCategories")] // Post: api/Category/addSubCategories
+        [HttpPost("addSubCategories")] // Post: Category/addSubCategories
         public async Task<ActionResult<EndpointResponse<bool>>> addSubCategories(Guid CategoryId,[FromBody] IEnumerable<SubCategoryDTo> SubCategoryDTos)
         {
             var result = await mediator.Send(new AddsubcategoriesCommend(CategoryId,SubCategoryDTos));
@@ -78,7 +78,7 @@ namespace WorkoutCatalogService.Features.Categories.Controller
         }
 
 
-        [HttpPost("addaCategoryWithSubCategories")] // Post: api/Category/addSubCategories
+        [HttpPost("addaCategoryWithSubCategories")] // Post: Category/addSubCategories
         public async Task<ActionResult<EndpointResponse<bool>>> addaCategoryWithSubCategories(AddCategoryWithSubcategoriesRequest request)
         {
             var result = await mediator.Send(new AddCategoryOrchestrator(request.Name,request.Description, request.SubCategories));

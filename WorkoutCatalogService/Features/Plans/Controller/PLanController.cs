@@ -12,7 +12,7 @@ using WorkoutCatalogService.Shared.Response;
 
 namespace WorkoutCatalogService.Features.Plans.Controller
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class PLanController : ControllerBase
     {
@@ -23,7 +23,7 @@ namespace WorkoutCatalogService.Features.Plans.Controller
             this.mediator = mediator;
         }
 
-        [HttpGet("GetAllPlans")] //api/PLan/GetAllPlans
+        [HttpGet("GetAllPlans")] //PLan/GetAllPlans
         public async Task<ActionResult<EndpointResponse<IEnumerable<PalnToReturnDto>>>> GetAllPlans()
         {
             var plansResult = await mediator.Send(new GetAllplansQuery());
@@ -42,7 +42,7 @@ namespace WorkoutCatalogService.Features.Plans.Controller
         }
 
 
-        [HttpGet("Getplanbyid")] //api/PLan/Getplanbyid
+        [HttpGet("Getplanbyid")] //PLan/Getplanbyid
         public async Task<ActionResult<EndpointResponse<PalnToReturnDto>>> Getplanbyid(Guid id)
         {
             var plansResult = await mediator.Send(new GetPlanbyidQyery(id));
@@ -61,7 +61,7 @@ namespace WorkoutCatalogService.Features.Plans.Controller
         }
 
 
-        [HttpPost("Addplan")] //api/PLan/Addplan
+        [HttpPost("Addplan")] //PLan/Addplan
         public async Task<ActionResult<EndpointResponse<Guid>>> addplan(AddplanDto dto) 
         {
             var addplanresult= await mediator.Send(new AddPlanCommend(dto.Name,dto.Description,dto.DifficultyLevel,dto.AssignedUserIds));
@@ -81,7 +81,7 @@ namespace WorkoutCatalogService.Features.Plans.Controller
         }
 
 
-        [HttpPost("CreateFullWorkoutPlan")] //api/PLan/CreateFullWorkoutPlan
+        [HttpPost("CreateFullWorkoutPlan")] //PLan/CreateFullWorkoutPlan
         public async Task<ActionResult<EndpointResponse<Guid>>> CreateFullWorkoutPlan(CreateFullWorkoutPlanRequest request )
         {
             var CreatFullWorkoutPlanResult = await mediator.Send(new CreateFullPlanOrchestrator(request.Plan, request.PlanWorkouts, request.Workouts));
