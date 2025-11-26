@@ -42,7 +42,6 @@
     <Folder Include="Data\Migrations\" />
     <Folder Include="Features\Exercises\" />
     <Folder Include="Features\Plans\Validators\Queries\" />
-    <Folder Include="Features\PlanWorkouts\CQRS\Quries\" />
     <Folder Include="Features\PlanWorkouts\Controller\" />
     <Folder Include="Features\PlanWorkouts\Validators\Quries\" />
   </ItemGroup>
