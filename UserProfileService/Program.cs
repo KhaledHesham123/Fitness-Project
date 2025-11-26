@@ -67,7 +67,7 @@ namespace UserProfileService
 
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseMiddleware<TransactionMiddlerWare>();
 

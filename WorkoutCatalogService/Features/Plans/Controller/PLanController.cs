@@ -102,7 +102,7 @@ namespace WorkoutCatalogService.Features.Plans.Controller
         }
 
 
-        [HttpGet("GetPLansWithUsersIds")] //api/PLan/GetPLansWithUsersIds
+        [HttpGet("GetPLansWithUsersIds")] ///PLan/GetPLansWithUsersIds
         public async Task<ActionResult<EndpointResponse<IEnumerable<PalnToReturnDto>>>> GetPLansWithUsersIds([FromQuery]Guid id)
         {
             var GetPlansResult = await mediator.Send(new GetPlansWithUserIdOrchestrator(id));

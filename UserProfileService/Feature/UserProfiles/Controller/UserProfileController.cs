@@ -22,7 +22,7 @@ namespace UserProfileService.Feature.UserProfiles.Controller
         public IMediator Mediator { get; }
         [HttpPost("GetUsersByPlanIds")] //POST: /UserProfile/GetUsersByPlanIds
 
-        public async Task<EndpointResponse<IEnumerable<UserToReturnDto>>> GetUsersByPlanIds([FromBody]IEnumerable<Guid> id) 
+        public async Task<EndpointResponse<IEnumerable<UserToReturnDto>>> GetUsersByPlanIds([FromBody] IEnumerable<Guid> id) 
         {
             var user = await Mediator.Send(new GetUsersbyplanid(id));
             if (!user.IsSuccess)

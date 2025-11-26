@@ -84,7 +84,7 @@ namespace WorkoutCatalogService
             }
 
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseMiddleware<TransactionMiddlerWare>();
 

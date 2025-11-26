@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using WorkoutCatalogService.Features.Plans.CQRS.Quries;
@@ -83,22 +84,29 @@ namespace WorkoutCatalogService.Features.Plans.CQRS.Orchestrator
             var respone = await httpclient.PostAsJsonAsync($"{UserProfileServiceUrl}/UserProfile/GetUsersByPlanIds", planids);
 
 
-            IEnumerable<UserToReturnDto> users = Enumerable.Empty<UserToReturnDto>();
+            EndpointResponse<IEnumerable<UserToReturnDto>>? fullResponse = null;
+
+            IEnumerable<UserToReturnDto> usersToReturn = Enumerable.Empty<UserToReturnDto>();
             if (respone.IsSuccessStatusCode)
             {
                 var content = await respone.Content.ReadAsStringAsync();
-                users = JsonSerializer.Deserialize<IEnumerable<UserToReturnDto>>(content, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                }) ?? Enumerable.Empty<UserToReturnDto>();
+                fullResponse = JsonSerializer.Deserialize<EndpointResponse<IEnumerable<UserToReturnDto>>>(
+                    content,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             }
 
-            return users;
+            if (fullResponse is { IsSuccess: true, Data: not null })
+            {
+                usersToReturn = fullResponse.Data;
+            }
+
+            return usersToReturn;
         }
-
-
-
     }
+
+
+
+    
 }
 
 

@@ -38,6 +38,7 @@ namespace UserProfileService.Feature.UserProfiles.CQRS.Quries
                 planid=x.planid,
                 ProfilePictureUrl=x.ProfilePictureUrl,
                 Weight=x.Weight,
+               
             }).ToList();
 
             return RequestResponse<IEnumerable<UserToReturnDto>>

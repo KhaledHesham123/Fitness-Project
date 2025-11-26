@@ -16,6 +16,10 @@ namespace WorkoutCatalogService.Shared.Response
             Message = message;
             IsSuccess = isSuccess;
         }
+        public EndpointResponse()
+        {
+            
+        }
         public EndpointResponse(  string message = "", bool isSuccess = true)
         {
             
