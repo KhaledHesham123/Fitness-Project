@@ -7,11 +7,11 @@ using UserProfileService.Shared.MessageBrocker.Messages;
 
 namespace UserProfileService.Shared.MessageBrocker.Consumers
 {
-    public class PLanCreatedConsumer
+    public class PlanAddedConsumer
     {
         private readonly IMediator _mediator;
 
-        public PLanCreatedConsumer(IMediator mediator)
+        public PlanAddedConsumer(IMediator mediator)
         {
             this._mediator = mediator;
         }
