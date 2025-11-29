@@ -1,12 +1,11 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
-using NutritionService.Domain.Entities;
 using NutritionService.Infrastructure.Persistence.Data;
 using NutritionService.Infrastructure.Repositories;
 using NutritionService.Shared.Interfaces;
+using NutritionService.Shared.MessageBrocker.Consumers.UserTargetConsumer;
+using NutritionService.Shared.MessageBrocker.MessageBrokerService;
 using System.Reflection;
 
 namespace NutritionService
@@ -33,10 +32,24 @@ namespace NutritionService
                 });
             });
             builder.Services.AddDbContext<NutritionDbContext>(options =>
-                   options.UseSqlServer(builder.Configuration.GetConnectionString("NutritionDatabase")));
-            builder.Services.AddMediatR(cfg =>
-                cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+                   options.UseSqlServer(builder.Configuration.GetConnectionString("NutritionDatabase"), sqlServerOptionsAction: sqlOptions =>
+                   {
+                       // Add the retry configuration here
+                       sqlOptions.EnableRetryOnFailure(
+                           maxRetryCount: 5,                  
+                           maxRetryDelay: TimeSpan.FromSeconds(30), 
+                           errorNumbersToAdd: null            // Use the default set of transient error codes
+                       );
+                   }
+               )
+            );          
+            builder.Services.AddMediatR(typeof(Program).Assembly, typeof(SaveUserTargetCommandHandler).Assembly);
+            builder.Services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
             builder.Services.AddScoped<IMealRepository,MealRepository>();
+            builder.Services.AddScoped<IUserNutritionProfileRepository,UserNutritionProfileRepository>();
+            builder.Services.AddScoped<IMessageBrokerPublisher, MessageBrokerPublisher>();
+            builder.Services.AddHostedService<RabbitMQConsumerService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

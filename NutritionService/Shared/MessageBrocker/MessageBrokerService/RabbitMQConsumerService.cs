@@ -1,8 +1,8 @@
 ﻿using MediatR;
+using NutritionService.Shared.MessageBrocker.Consumers;
 using NutritionService.Shared.MessageBrocker.Messages;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System.Reflection.Metadata;
 using System.Text;
 
 namespace NutritionService.Shared.MessageBrocker.MessageBrokerService
@@ -11,11 +11,10 @@ namespace NutritionService.Shared.MessageBrocker.MessageBrokerService
     {
         IConnection _connection;
         IChannel _channel;
-        IMediator _mediator;
-        public RabbitMQConsumerService(IMediator mediator)
+        private readonly IServiceScopeFactory _scopeFactory; // Change this
+        public RabbitMQConsumerService(IServiceScopeFactory scopeFactory)
         {
-            _mediator = mediator;
-
+            _scopeFactory = scopeFactory;
             var factory = new ConnectionFactory()
             {
                 HostName = "rabbitmq",
@@ -24,18 +23,32 @@ namespace NutritionService.Shared.MessageBrocker.MessageBrokerService
                 Password = "admin123",
                 VirtualHost = "/"
             };
-
             _connection = factory.CreateConnectionAsync().Result;
             _channel = _connection.CreateChannelAsync().Result;
-            // _channel.BasicGetAsync() // pull mechanism
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
+            await _channel.ExchangeDeclareAsync(
+                  exchange: "profile",
+                  type: ExchangeType.Fanout,
+                  durable: true
+            );
+            await _channel.QueueDeclareAsync(
+                  queue: Constants.ProfileEventsQueue,
+                  durable: true,
+                  exclusive: false,
+                  autoDelete: false,
+                  arguments: null
+             );
+            await _channel.QueueBindAsync(
+                 queue: Constants.ProfileEventsQueue,
+                 exchange: "profile",
+                 routingKey: "" // ignored for fanout
+            );
             var consumer = new AsyncEventingBasicConsumer(_channel);
             consumer.ReceivedAsync += Consumer_ReceivedAync; // push mechanism
-            await _channel.BasicConsumeAsync("Added_Products", false, consumer);
-            await _channel.BasicConsumeAsync("Deleted_Products", false, consumer);
+            await _channel.BasicConsumeAsync(Constants.ProfileEventsQueue,false, consumer);
         }
 
         private async Task Consumer_ReceivedAync(object sender, BasicDeliverEventArgs @event)
@@ -56,31 +69,37 @@ namespace NutritionService.Shared.MessageBrocker.MessageBrokerService
             finally
             {
                 //Acknowledge the message regardless of success or failure to prevent re-delivery
-                await _channel.BasicAckAsync(@event.DeliveryTag, false);
+                await _channel.BasicAckAsync(@event.DeliveryTag,false);
             }
         }
 
-        private void InvokeConsumer(BasicMessage basicMessage)
+        private async Task InvokeConsumer(BasicMessage basicMessage)
         {
-            var namespaceName = "Services.RabbitMQ.Consumers";
-            var typeName = basicMessage.Type.Replace("Message", "Consumer");
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var scopedMediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                var namespaceName = "NutritionService.Shared.MessageBrocker.Consumers.UserTargetConsumer";
+                var typeName = basicMessage.Type.Replace("Message", "Consumer");
+                // NutritionService.Shared.MessageBrocker.Consumers.UserTargetConsumer.UserTargetConsumer
+                var fullTypeName =
+                    $"{namespaceName}.{typeName}, {typeof(Ref).Assembly.GetName().Name}";
+                Type type = Type.GetType(fullTypeName)!;
+                Console.WriteLine($"Resolving type: {type}");
 
-            Type type = Type.GetType($"{namespaceName}.{typeName},{typeof(AssemblyReference).Assembly.GetName().Name}");
+                var consumer = Activator.CreateInstance(type, scopedMediator);
+                var methodInfo = type.GetMethod("Consume");
 
-
-            var consumer = Activator.CreateInstance(type, _mediator);
-            var methodInfo = type.GetMethod("Consume");
-
-            methodInfo.Invoke(consumer, new object[] { basicMessage });
-
+                var task = (Task)methodInfo.Invoke(consumer, new object[] { basicMessage });
+                task.Wait();
+            }
         }
 
         private BasicMessage GetMessage(string message)
         {
             var basicMessage = System.Text.Json.JsonSerializer.Deserialize<BasicMessage>(message);
-            var namesapce = "Shared.RabbitMQ";
+            var namesapce = "NutritionService.Shared.MessageBrocker.Messages";
             Type type = Type.GetType($"{namesapce}.{basicMessage?.Type},{typeof(BasicMessage).Assembly.GetName().Name}")!;
-
+            Console.WriteLine($"Resolving type: {type}");
             return System.Text.Json.JsonSerializer.Deserialize(message, type) as BasicMessage;
         }
 

@@ -12,23 +12,24 @@ namespace NutritionService.Infrastructure.Persistence.Data
 
         public DbSet<Meal> Meals { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
+        public DbSet<UserNutritionProfile> UserNutritionProfiles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Ingredient>()
-     .HasOne(i => i.Meal)
-     .WithMany(m => m.Ingredients)
-     .HasForeignKey(i => i.MealId)
-     .OnDelete(DeleteBehavior.Cascade);
+                        .HasOne(i => i.Meal)
+                        .WithMany(m => m.Ingredients)
+                        .HasForeignKey(i => i.MealId)
+                        .OnDelete(DeleteBehavior.Cascade);
 
 
 
             modelBuilder.Entity<Meal>()
-     .Property(m => m.Name)
-     .IsRequired()
-     .HasMaxLength(200);
+                        .Property(m => m.Name)
+                        .IsRequired()
+                        .HasMaxLength(200);
 
             modelBuilder.Entity<Meal>()
                 .Property(m => m.Description)
@@ -56,9 +57,9 @@ namespace NutritionService.Infrastructure.Persistence.Data
                 .Property(m => m.Fat)
                 .HasPrecision(10, 2);
             modelBuilder.Entity<Ingredient>()
-                        .HasData(new Ingredient {Id=1,  Name = "Oats", Quantity = "1", MealId = 1 },
-                                 new Ingredient {Id=2,  Name = "Milk", Quantity = "1", MealId = 1  },
-                                 new Ingredient {Id=3,  Name = "Banana", Quantity = "1", MealId = 1  }
+                        .HasData(new Ingredient { Id = 1, Name = "Oats", Quantity = "1", MealId = 1 },
+                                 new Ingredient { Id = 2, Name = "Milk", Quantity = "1", MealId = 1 },
+                                 new Ingredient { Id = 3, Name = "Banana", Quantity = "1", MealId = 1 }
                         );
             modelBuilder.Entity<Meal>()
                 .HasData(
@@ -71,9 +72,9 @@ namespace NutritionService.Infrastructure.Persistence.Data
                         MealType = Domain.Enums.MealType.Dinner,
                         DifficultyLevel = Domain.Enums.DifficultyLevel.Intermediate,
                         Calories = 600,
-                        Protein = 25.50m,
-                        Carbohydrates = 75.00m,
-                        Fat = 20.00m,
+                        Protein = 25.50,
+                        Carbohydrates = 75.00,
+                        Fat = 20.00,
                         ImageUrl = "https://example.com/images/spaghetti-bolognese.jpg"
                     }
                 );
