@@ -24,9 +24,9 @@ namespace NutritionService.Features.MealsByUseId
             if (UserNutritionProfile.ProteinGoal>0)
                 meals = meals.Where(m => m.Protein >= UserNutritionProfile.ProteinGoal);
             if (UserNutritionProfile.CarbGoal > 0)
-                meals = meals.Where(m => m.Protein >= UserNutritionProfile.CarbGoal);
+                meals = meals.Where(m => m.Carbohydrates >= UserNutritionProfile.CarbGoal);
             if (UserNutritionProfile.FatGoal > 0)
-                meals = meals.Where(m => m.Protein >= UserNutritionProfile.FatGoal);
+                meals = meals.Where(m => m.Fat >= UserNutritionProfile.FatGoal);
 
             var mealsResult = await meals.Skip((request.pageNumber - 1) * request.pageSize)
                                   .Take(request.pageSize)

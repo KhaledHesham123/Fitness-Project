@@ -8,7 +8,7 @@ namespace NutritionService.Features.MealsByUseId
     [Route("api/[controller]")]
     public class MealController(IMediator _mediator) : ControllerBase
     {
-        [HttpGet]
+        [HttpGet("RecommendationByUserId")]
         public async Task<IActionResult> GetMealsRecommendationByUserId([FromQuery] MealsByUserIdDto mealsByUserIdDto)
         {
             var result =await  _mediator.Send(new MealsByUserIdQuery(mealsByUserIdDto.UserId , mealsByUserIdDto.pageNumber , mealsByUserIdDto.pageSize));
