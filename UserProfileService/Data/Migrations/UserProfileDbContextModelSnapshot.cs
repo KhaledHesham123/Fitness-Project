@@ -74,7 +74,7 @@ namespace UserProfileService.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("CurrentWeight")
-                        .HasColumnType("decimal(5,2)");
+                        .HasColumnType("decimal(10,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");

@@ -7,9 +7,9 @@ using WorkoutCatalogService.Shared.Srvieces;
 
 namespace WorkoutCatalogService.Features.PlanWorkouts.CQRS.Commends
 {
-    public record AddPlanWorkoutCommend(IEnumerable<AddPlanWorkoutDto> PlanWorkoutDtos) :IRequest< IEnumerable< PlanWorkout>>;
+    public record AddPlanWorkoutCommend(IEnumerable<AddPlanWorkoutDto> PlanWorkoutDtos) :IRequest<RequestResponse< IEnumerable< Guid>>>;
 
-    public class AddPlanWorkoutCommendHandler : IRequestHandler<AddPlanWorkoutCommend, IEnumerable<PlanWorkout>>
+    public class AddPlanWorkoutCommendHandler : IRequestHandler<AddPlanWorkoutCommend, RequestResponse<IEnumerable<Guid>>>
     {
         private readonly IGenericRepository<PlanWorkout> _genericRepository;
 
@@ -17,34 +17,24 @@ namespace WorkoutCatalogService.Features.PlanWorkouts.CQRS.Commends
         {
             this._genericRepository = genericRepository;
         }
-        public async Task<IEnumerable<PlanWorkout>> Handle(AddPlanWorkoutCommend request, CancellationToken cancellationToken)
+        public async Task<RequestResponse<IEnumerable<Guid>>> Handle(AddPlanWorkoutCommend request, CancellationToken cancellationToken)
         {
-            bool isvalid= DtoValidator<AddPlanWorkoutDto>.TryValidate(request.PlanWorkoutDtos, out List<string> errors);
-            if (!isvalid)
-                return null;
+            
 
-            var PLanWorkouts= new List<PlanWorkout>();
-
-            foreach (var planworkout in request.PlanWorkoutDtos)
+            var PLanWorkouts= request.PlanWorkoutDtos.Select(dto => new PlanWorkout
             {
-                PLanWorkouts.Add(new PlanWorkout 
-                {
-                    Sets = planworkout.Sets,
-                    Reps = planworkout.Reps,
-                    ExerciseId =planworkout.ExerciseId,
-                    WorkoutPlanId=planworkout.WorkoutPlanId,
-                });
-
-
-            }
-
-            if (!PLanWorkouts.Any())
-                return null;
+               Sets=dto.Sets,
+               Reps=dto.Reps,
+               ExerciseId=dto.ExerciseId,
+               WorkoutPlanId=dto.WorkoutPlanId
+            }).ToList();
 
             await _genericRepository.AddRangeAsync(PLanWorkouts);
             await _genericRepository.SaveChanges();
 
-            return PLanWorkouts;
+
+
+            return RequestResponse<IEnumerable<Guid>>.Success(PLanWorkouts.Select(pw=>pw.Id), "PlanWorkouts added successfully", 201);
 
         }
     }

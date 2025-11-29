@@ -1,5 +1,6 @@
 ﻿using Azure.Core;
 using MediatR;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Tokens.Experimental;
 using System.ComponentModel.DataAnnotations;
@@ -11,51 +12,56 @@ using WorkoutCatalogService.Shared.Srvieces;
 
 namespace WorkoutCatalogService.Features.Categories.CQRS.Commends
 {
-    public record AddsubcategoriesCommend(Guid CategoryId, IEnumerable<SubCategoryDTo> SubCategoryDTos):IRequest<RequestResponse<IEnumerable<SubCategoryDTo>>>;
+    public record AddsubcategoriesCommend(Guid CategoryId, IEnumerable<SubCategoryDTo> SubCategoryDTos):IRequest<RequestResponse<bool>>;
 
-    public class AddsubcategoriesCommendHandler : IRequestHandler<AddsubcategoriesCommend, RequestResponse<IEnumerable<SubCategoryDTo>>>
+    public class AddsubcategoriesCommendHandler : IRequestHandler<AddsubcategoriesCommend, RequestResponse<bool>>
     {
         private readonly IGenericRepository<SubCategory> genericRepository;
+        private readonly IMemoryCache memoryCache;
 
-        public AddsubcategoriesCommendHandler(IGenericRepository<SubCategory> genericRepository)
+        public AddsubcategoriesCommendHandler(IGenericRepository<SubCategory> genericRepository,IMemoryCache memoryCache)
         {
             this.genericRepository = genericRepository;
+            this.memoryCache = memoryCache;
         }
-        public async Task<RequestResponse<IEnumerable<SubCategoryDTo>>> Handle(AddsubcategoriesCommend request, CancellationToken cancellationToken)
+        public async Task<RequestResponse<bool>> Handle(AddsubcategoriesCommend request, CancellationToken cancellationToken)
         {
-            var validationResponse = GetSubcategoriesValidationErrors(request.SubCategoryDTos);
 
-            if (validationResponse.Any())
-            {
-                string errorMessage = string.Join(" , ", validationResponse);
-                return RequestResponse<IEnumerable<SubCategoryDTo>>.Fail(errorMessage, 400);
-            }
+         
 
-            var mappedSubcategories = request.SubCategoryDTos.Select(dto => new SubCategory
+            var Subcategories = request.SubCategoryDTos.Select(dto => new SubCategory
             {
                 Description = dto.Description,
                 Name = dto.Name,
                 CategoryId = request.CategoryId,
                 
             }).ToList();
-            await genericRepository.AddRangeAsync(mappedSubcategories);
+
+
+            await genericRepository.AddRangeAsync(Subcategories);
             await genericRepository.SaveChanges();
 
-            return RequestResponse<IEnumerable<SubCategoryDTo>>.Success(request.SubCategoryDTos, "subcategories added successfully", 200);
-        }
-
-        private List<string> GetSubcategoriesValidationErrors(IEnumerable<SubCategoryDTo> subCategoryDTos)
-        {
-
-            return subCategoryDTos.SelectMany(dto =>
+            foreach (var subcategory in Subcategories) 
             {
-                DtoValidator<SubCategoryDTo>.TryValidate(dto, out var dtoErrors);
-                return dtoErrors.Select(e => $"Validation failed for DTO '{dto.Name}': {e}");
-            }).ToList();
+                memoryCache.Set(subcategory.Id, new SubCategoryDTo
+                {
+                    Name = subcategory.Name,
+                    Description = subcategory.Description,
+                    CategoryId = subcategory.CategoryId
+                }, TimeSpan.FromHours(2));
+            }
 
+                var mappedsubcategories = Subcategories.Select(sc => new SubCategoryDTo
+                {
+                Name = sc.Name,
+                Description = sc.Description,
+                CategoryId = sc.CategoryId
+                });
 
-
+            return RequestResponse<bool>.Success(true, "subcategories added successfully", 200);
         }
+
+       
     }
 
 

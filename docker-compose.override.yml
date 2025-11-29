@@ -32,12 +32,13 @@ services:
       timeout: 5s
       retries: 10
 
-
   workoutcatalogservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
+      # 
+      - Services__UserProfile=http://userprofileservice:8080
     ports:
       - "51370:8080"
       - "51371:8081"

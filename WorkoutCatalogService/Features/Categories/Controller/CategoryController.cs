@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using WorkoutCatalogService.Features.Categories.CQRS.Commends;
 using WorkoutCatalogService.Features.Categories.CQRS.Orchestratots;
 using WorkoutCatalogService.Features.Categories.CQRS.Quries;
 using WorkoutCatalogService.Features.Categories.DTOs;
@@ -10,7 +11,7 @@ using WorkoutCatalogService.Shared.Response;
 
 namespace WorkoutCatalogService.Features.Categories.Controller
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
@@ -21,7 +22,7 @@ namespace WorkoutCatalogService.Features.Categories.Controller
             this.mediator = mediator;
         }
 
-        [HttpGet("GetAllCategories")] // GET: api/Category/GetAllCategories
+        [HttpGet("GetAllCategories")] // GET: Category/GetAllCategories
         public async Task<ActionResult<EndpointResponse<IEnumerable<CategoriesDTO>>>> GetAllCategories()
         {
             var categoriesResult = await mediator.Send(new GetAllCategories());
@@ -39,10 +40,48 @@ namespace WorkoutCatalogService.Features.Categories.Controller
             return Ok(response);
         }
 
-        [HttpPost("addCategory")] // PUT: api/Category/addCategory
+        [HttpPost("addCategory")] // Post: Category/addCategory
         public async Task<ActionResult<EndpointResponse<bool>>> AddCategory([FromBody] CategoryToaddDTO category)
         {
             var result = await mediator.Send(new AddCategoryOrchestrator(category.Name,category.Description,category.SubCategories));
+
+            var response = new EndpointResponse<bool>
+            {
+                IsSuccess = result.IsSuccess,
+                Message = result.Message,
+                Data = result.Data
+            };
+
+            if (!result.IsSuccess)
+                return BadRequest(response);
+
+            return Ok(response);
+        }
+
+
+        [HttpPost("addSubCategories")] // Post: Category/addSubCategories
+        public async Task<ActionResult<EndpointResponse<bool>>> addSubCategories(Guid CategoryId,[FromBody] IEnumerable<SubCategoryDTo> SubCategoryDTos)
+        {
+            var result = await mediator.Send(new AddsubcategoriesCommend(CategoryId,SubCategoryDTos));
+
+            var response = new EndpointResponse<bool>
+            {
+                IsSuccess = result.IsSuccess,
+                Message = result.Message,
+                Data = result.Data
+            };
+
+            if (!result.IsSuccess)
+                return BadRequest(response);
+
+            return Ok(response);
+        }
+
+
+        [HttpPost("addaCategoryWithSubCategories")] // Post: Category/addSubCategories
+        public async Task<ActionResult<EndpointResponse<bool>>> addaCategoryWithSubCategories(AddCategoryWithSubcategoriesRequest request)
+        {
+            var result = await mediator.Send(new AddCategoryOrchestrator(request.Name,request.Description, request.SubCategories));
 
             var response = new EndpointResponse<bool>
             {

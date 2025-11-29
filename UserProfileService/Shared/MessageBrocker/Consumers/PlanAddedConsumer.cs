@@ -7,11 +7,11 @@ using UserProfileService.Shared.MessageBrocker.Messages;
 
 namespace UserProfileService.Shared.MessageBrocker.Consumers
 {
-    public class PLanCreatedConsumer
+    public class PlanAddedConsumer
     {
         private readonly IMediator _mediator;
 
-        public PLanCreatedConsumer(IMediator mediator)
+        public PlanAddedConsumer(IMediator mediator)
         {
             this._mediator = mediator;
         }
@@ -20,22 +20,21 @@ namespace UserProfileService.Shared.MessageBrocker.Consumers
         {
             var msg = basicMessage as PlanAddedMessage;
 
-            var user = await _mediator.Send(new GetUserByidQuery(msg.Userid));
-            var mapedUser = new UserProfile 
+            var user = await _mediator.Send(new GetUsersByidQuery(msg.Userid));
+            var mapedUser = user.Data.Select(x => new UserProfile 
             {
-                Id = user.Data.Id,
-                DateOfBirth = user.Data.DateOfBirth,
-                FirstName= user.Data.FirstName,
-                LastName = user.Data.LastName,
-                FitnessGoal = user.Data.FitnessGoal,
-                Gender=user.Data.Gender,
-                Height=user.Data.Height,
-                ProfilePictureUrl=user.Data.ProfilePictureUrl, 
-               planid=user.Data.planid,
-               Weight=user.Data.Weight,
-               
-            };
+                Id = x.Id,
+                DateOfBirth = x.DateOfBirth,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                FitnessGoal = Enum.Parse<FitnessGoal>(x.FitnessGoal),
+                Gender = Enum.Parse<Gender>(x.Gender),                
+                Height = x.Height,
+                ProfilePictureUrl = x.ProfilePictureUrl,
+                planid = x.planid,
+                Weight = x.Weight,
 
+            }).ToList();
             if (user.IsSuccess)
             {
                 await _mediator.Send(new AssginplanToUserCommend(mapedUser, msg.planid));

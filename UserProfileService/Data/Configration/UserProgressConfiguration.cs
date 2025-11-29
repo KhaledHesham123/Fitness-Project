@@ -9,7 +9,7 @@ namespace UserProfileService.Data.Configration
         public void Configure(EntityTypeBuilder<UserProgress> builder)
         {
             builder.Property(x => x.CurrentWeight)
-                 .HasColumnType("decimal(5,2)");
+                 .HasColumnType("decimal(10,2)");
         }
     }
 }

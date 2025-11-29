@@ -17,6 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="12.0.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
     <PackageReference Include="MediatR" Version="13.1.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.10" />
@@ -39,8 +41,9 @@
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
     <Folder Include="Features\Exercises\" />
-    <Folder Include="Features\PlanWorkouts\CQRS\Quries\" />
-    <Folder Include="Features\Workout\CQRS\Commend\" />
+    <Folder Include="Features\Plans\Validators\Queries\" />
+    <Folder Include="Features\PlanWorkouts\Controller\" />
+    <Folder Include="Features\PlanWorkouts\Validators\Quries\" />
   </ItemGroup>
 
 </Project>

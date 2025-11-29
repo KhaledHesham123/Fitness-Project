@@ -6,9 +6,9 @@ using UserProfileService.Shared.Response;
 
 namespace UserProfileService.Feature.UserProfiles.CQRS.Commends
 {
-    public record AssginplanToUserCommend(UserProfile UserProfile,Guid planid) :IRequest<RequestResponse<UserProfile>>;
+    public record AssginplanToUserCommend(IEnumerable<UserProfile> Users,Guid planid) :IRequest<RequestResponse<bool>>;
 
-    public class AssginplanToUserCommendHandler : IRequestHandler<AssginplanToUserCommend, RequestResponse<UserProfile>>
+    public class AssginplanToUserCommendHandler : IRequestHandler<AssginplanToUserCommend, RequestResponse<bool>>
     {
         private readonly IGenericRepository<UserProfile> _genericRepository;
 
@@ -16,32 +16,31 @@ namespace UserProfileService.Feature.UserProfiles.CQRS.Commends
         {
             this._genericRepository = genericRepository;
         }
-        public async Task<RequestResponse<UserProfile>> Handle(AssginplanToUserCommend request, CancellationToken cancellationToken)
+        public async Task<RequestResponse<bool>> Handle(AssginplanToUserCommend request, CancellationToken cancellationToken)
         {
-            var user=request.UserProfile;
 
-            if (request.UserProfile==null)
+            if (!request.Users.Any())
             {
-
-                return RequestResponse<UserProfile>.Fail("error there is no user", 404);
+                return RequestResponse<bool>.Fail("Error: there are no users", 404);
             }
-
-            user.planid= request.planid;
 
             try
             {
-                _genericRepository.SaveInclude(user);
+                foreach (var user in request.Users)
+                {
+                    user.planid = request.planid;
+                    _genericRepository.SaveInclude(user);
+                }
+
                 await _genericRepository.SaveChanges();
 
-                return RequestResponse<UserProfile>.Success(user,"plan add successfily");
-
+                return RequestResponse<bool>.Success(true, "Plan added successfully to all users");
             }
             catch (Exception ex)
             {
-
-                return RequestResponse<UserProfile>.Fail(ex.ToString(), 400);
+                return RequestResponse<bool>.Fail(ex.ToString(), 400);
             }
-            
+
         }
     }
 }

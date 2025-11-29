@@ -2,22 +2,22 @@
 using System.Numerics;
 using WorkoutCatalogService.Features.Categories.DTOs;
 using WorkoutCatalogService.Features.Plans.DTOs;
+using WorkoutCatalogService.Features.PlanWorkouts.DTOS;
 using WorkoutCatalogService.Shared.Constants;
 using WorkoutCatalogService.Shared.Entites;
 using WorkoutCatalogService.Shared.GenericRepos;
 using WorkoutCatalogService.Shared.MessageBrocker.MessageBrokerService;
 using WorkoutCatalogService.Shared.MessageBrocker.MessageBrokerService.Messages;
 
-//using WorkoutCatalogService.Shared.MessageBrocker.MessageBrokerService;
-//using WorkoutCatalogService.Shared.MessageBrocker.MessageBrokerService.Messages;
+
 using WorkoutCatalogService.Shared.Response;
 using WorkoutCatalogService.Shared.Srvieces;
 
 namespace WorkoutCatalogService.Features.Plans.CQRS.Commends
 {
-    public record AddPlanCommend(AddplanDto AddplanDto, IEnumerable<PlanWorkout> PlanWorkouts) : IRequest<RequestResponse<Plan>>;
+    public record AddPlanCommend( string Name, string Description, string DifficultyLevel, IEnumerable<Guid> AssignedUserIds) : IRequest<RequestResponse<Guid>>;
 
-    public class AddPlanCommendHandler : IRequestHandler<AddPlanCommend, RequestResponse<Plan>>
+    public class AddPlanCommendHandler : IRequestHandler<AddPlanCommend, RequestResponse<Guid>>
     {
         private readonly IGenericRepository<Shared.Entites.Plan> _genericRepository;
         private readonly IMessageBrokerPublisher messageBrokerPublisher;
@@ -27,30 +27,20 @@ namespace WorkoutCatalogService.Features.Plans.CQRS.Commends
             this._genericRepository = genericRepository;
             this.messageBrokerPublisher = messageBrokerPublisher;
         }
-        public async Task<RequestResponse<Plan>> Handle(AddPlanCommend request, CancellationToken cancellationToken)
+        public async Task<RequestResponse<Guid>> Handle(AddPlanCommend request, CancellationToken cancellationToken)
         {
-            bool isValid = DtoValidator<AddplanDto>.TryValidate(request.AddplanDto, out List<string> errors);
 
-            if (!isValid)
-            {
-                return RequestResponse<Plan>.Fail(string.Join(", ", errors), 400);
-            }
-
+           
             try
             {
                 var plan = new Plan
                 {
-                    Id = request.AddplanDto.id,
-                    Description = request.AddplanDto.Description,
-                    Name = request.AddplanDto.Name,
-                    DifficultyLevel = request.AddplanDto.DifficultyLevel,
-                    PlanWorkout = request.PlanWorkouts.ToList(),
+                    
+                    Description = request.Description,
+                    Name = request.Name,
+                    DifficultyLevel = Enum.Parse<DifficultyLevel>(request.DifficultyLevel, true),
+                    AssignedUserIds = request.AssignedUserIds.ToList()
                 };
-
-                if (request.AddplanDto.AssignedUserIds != Guid.Empty)
-                {
-                    plan.AssignedUserIds.Add(request.AddplanDto.AssignedUserIds);
-                }
 
                 await _genericRepository.addAsync(plan);
                 await _genericRepository.SaveChanges();
@@ -58,7 +48,7 @@ namespace WorkoutCatalogService.Features.Plans.CQRS.Commends
                 var msg = new PlanAddedMessage
                 {
                     Type = "PlanAdded",
-                    Userid = request.AddplanDto.AssignedUserIds,
+                    Userid = request.AssignedUserIds,
                     planid = plan.Id,
                 };
                 string TextMessage = System.Text.Json.JsonSerializer.Serialize(msg);
@@ -67,11 +57,11 @@ namespace WorkoutCatalogService.Features.Plans.CQRS.Commends
                                                               RabbitMQConstants.PlanCreatedRoutuigKey,
                                                               TextMessage);
 
-                return RequestResponse<Plan>.Success(plan, "Plan added successfully", 200);
+                return RequestResponse<Guid>.Success(plan.Id, "Plan added successfully", 200);
             }
             catch (Exception ex)
             {
-                return RequestResponse<Plan>.Fail($"Something went wrong during adding Plan: {ex.Message}", 500);
+                return RequestResponse<Guid>.Fail($"Something went wrong during adding Plan: {ex.Message}", 500);
             }
 
         }
