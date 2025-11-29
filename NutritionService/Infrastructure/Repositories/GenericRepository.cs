@@ -41,10 +41,10 @@ namespace NutritionService.Infrastructure.Repositories
             }
         }
 
-        //public async Task<T> GetByIdAsync(int id)
-        //{
-        //    return await _dbSet.FirstOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
-        //}
+        public async Task<T> GetByIdAsync(int id)
+        {
+            return await _dbSet.FirstOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
+        }
         public IQueryable<T> GetAll()
         {
             return _dbSet.Where(e => !e.IsDeleted);

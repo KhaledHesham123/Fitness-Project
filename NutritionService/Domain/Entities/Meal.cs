@@ -10,9 +10,9 @@ namespace NutritionService.Domain.Entities
         public MealType MealType { get; set; }
         public DifficultyLevel DifficultyLevel { get; set; } = DifficultyLevel.Beginner;
         public int Calories { get; set; }
-        public decimal Protein { get; set; }
-        public decimal Carbohydrates { get; set; } 
-        public decimal Fat { get; set; } 
+        public double Protein { get; set; }
+        public double Carbohydrates { get; set; } 
+        public double Fat { get; set; } 
         public string ImageUrl { get; set; } = string.Empty;
         public bool isPremium { get; set; } = false;
         public  ICollection<Ingredient> Ingredients { get; set; } = new List<Ingredient>();

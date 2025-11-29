@@ -9,7 +9,7 @@ namespace NutritionService.Shared.Interfaces
         Task DeleteAsync(Guid id);
         IQueryable<T> Get(Expression<Func<T, bool>> expression);
         IQueryable<T> GetAll();
-        //Task<T> GetByIdAsync(int id);
+        Task<T> GetByIdAsync(int id);
         IQueryable<T> GetIncluding(params Expression<Func<T, object>>[] includeProperties);
         Task<T> GetByConditionWithIncludesAsync(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includeProperties);
         void SaveChanges();
