@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using UserProfileService.Shared.Entites;
+using UserProfileService.Entites;
 
 namespace UserProfileService.Data.Configration
 {
@@ -9,7 +9,7 @@ namespace UserProfileService.Data.Configration
         public void Configure(EntityTypeBuilder<UserProgress> builder)
         {
             builder.Property(x => x.CurrentWeight)
-                 .HasColumnType("decimal(10,2)");
+                   .HasPrecision(5, 2);
         }
     }
 }

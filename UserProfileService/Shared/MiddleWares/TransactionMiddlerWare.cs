@@ -1,7 +1,4 @@
-﻿
-using UserProfileService.Data.Context;
-using UserProfileService.Shared.GenericRepos;
-using UserProfileService.Shared.UnitofWorks;
+﻿using UserProfileService.Contract;
 
 namespace UserProfileService.Shared.MiddleWares
 {
