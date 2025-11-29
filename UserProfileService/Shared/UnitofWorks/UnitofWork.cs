@@ -1,10 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using UserProfileService.Data.Context;
-
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using UserProfileService.Contract;
+using UserProfileService.Data;
 namespace UserProfileService.Shared.UnitofWorks
 {
-    public class UnitofWork:IunitofWork
+    public class UnitofWork : IunitofWork
     {
 
         private readonly UserProfileDbContext _dbContext;
