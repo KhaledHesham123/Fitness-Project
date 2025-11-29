@@ -1,10 +1,11 @@
 
-using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using UserProfileService.Data.Context;
-using UserProfileService.Shared.GenericRepos;
+using Microsoft.EntityFrameworkCore;
+using UserProfileService.Contract;
+using UserProfileService.Data;
+using UserProfileService.Features.Orchestrators;
+using UserProfileService.Helper;
 using UserProfileService.Shared.MiddleWares;
-using UserProfileService.Shared.Services.attachmentServices;
 using UserProfileService.Shared.UnitofWorks;
 
 namespace UserProfileService
@@ -31,16 +32,15 @@ namespace UserProfileService
             {
                 cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly());
             });
-
+            builder.Services.AddHttpClient(); // يسجل HttpClient عادي
             builder.Services.AddScoped<IunitofWork, UnitofWork>();
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
-            builder.Services.AddScoped<IattachmentService,attachmentService>();
-
-
-
             builder.Services.AddScoped<TransactionMiddlerWare>();
-            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddScoped<IAddUserprofileQrcs, AddUserprofileQrcs>();
+            builder.Services.AddScoped<IUpdateUserProfileQrccs, UpdateUserProfileQrccs>();
+            builder.Services.AddScoped<IImageHelper, ImageHelper>();
+            builder.Services.AddHttpContextAccessor();
+
 
             var app = builder.Build();
 
@@ -67,7 +67,7 @@ namespace UserProfileService
 
             }
 
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             app.UseMiddleware<TransactionMiddlerWare>();
 
